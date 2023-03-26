@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 
-const ItemDetail: NextPage = () => {
+const Detail: NextPage = () => {
 	return (
 		<div className='bg-[#101010] text-[#fafafa] h-full font-Roboto px-4 py-8'>
 			<div>
@@ -74,4 +74,4 @@ const ItemDetail: NextPage = () => {
 	);
 };
 
-export default ItemDetail;
+export default Detail;
