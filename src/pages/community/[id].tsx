@@ -3,7 +3,7 @@ import type { NextPage } from 'next';
 const CommunityPostDetail: NextPage = () => {
 	return (
 		<div className='bg-[#101010] text-[#fafafa] h-full min-h-screen font-SCoreDream px-4 py-12'>
-			<div className='flex items-center gap-2 mt-4'>
+			<div className='flex items-center gap-2'>
 				<div className='bg-gray-400 w-12 aspect-square rounded-lg' />
 				<div>
 					<p className='font-medium text-lg'>Von Neumann</p>
