@@ -13,7 +13,7 @@ const Community: NextPage = () => {
 						HDMI를 어디다 끼우는 거죠ㅠㅠ?
 					</span>
 					<div className='mt-8 flex justify-start font-normal text-xs text-gray-400 gap-2'>
-						<span>VON NEUMANN</span>
+						<span>Von Neumann</span>
 						<span className='text-gray-600 font-medium'>18시간 전</span>
 					</div>
 					<div className='mt-4 flex justify-end items-center font-light gap-4 text-sm text-gray-200'>

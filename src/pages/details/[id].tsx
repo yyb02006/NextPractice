@@ -2,14 +2,14 @@ import type { NextPage } from 'next';
 
 const Detail: NextPage = () => {
 	return (
-		<div className='bg-[#101010] text-[#fafafa] h-full font-Roboto px-4 py-8'>
+		<div className='bg-[#101010] text-[#fafafa] h-full font-Roboto px-4 py-12'>
 			<div>
 				<div className='bg-indigo-600 w-full aspect-square rounded-md' />
 				<div className='flex items-center gap-2 mt-4'>
 					<div className='bg-pink-400 w-12 aspect-square rounded-md' />
 					<div>
 						<p className='font-medium text-lg'>Steve Jebs</p>
-						<p className='font-SCoreDream font-normal text-sm text-gray-500 cursor-pointer hover:text-gray-300 hover:translate-x-1 transition'>
+						<p className='font-SCoreDream font-normal text-xs text-gray-500 cursor-pointer hover:text-gray-300 hover:translate-x-1 transition'>
 							자세히 알아보기 &rarr;
 						</p>
 					</div>
