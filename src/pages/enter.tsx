@@ -47,9 +47,7 @@ export default function Enter() {
 				<form className='flex flex-col item mt-4'>
 					<label className='font-normal text-sm text-gray-300'>
 						{method === 'email' ? '이-메일 어드레-쓰' : null}
-						{method === 'phone'
-							? '정말 나 원하는 게 하나이쏘 ~ 니 전화번호'
-							: null}
+						{method === 'phone' ? 'One call Away - Charlie puth' : null}
 					</label>
 					<div className='mt-2 mb-4'>
 						{method === 'email' ? (
@@ -66,8 +64,9 @@ export default function Enter() {
 									+82
 								</span>
 								<input
-									className='appearance-none w-full bg-gray-200 border-gray-300 text-[#101010] focus:border-green-600 focus:ring-[2px] focus:ring-green-600 rounded-r-sm'
+									className='appearance-none w-full bg-gray-200 border-gray-300 text-[#101010] placeholder-gray-400 font-medium focus:border-green-600 focus:ring-[2px] focus:ring-green-600 rounded-r-sm'
 									type='number'
+									placeholder='010-1234-5678'
 									required
 								/>
 							</div>
