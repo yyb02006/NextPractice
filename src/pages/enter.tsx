@@ -9,7 +9,7 @@ export default function Enter() {
 	const onEmailClick = () => setMethod('email');
 	const onPhoneClick = () => setMethod('phone');
 	return (
-		<div className='bg-[#101010] text-[#fafafa] border-[#fafafa] overflow-hidden h-screen font-SCoreDream antialiased'>
+		<div className='bg-[#101010] text-[#fafafa] border-[#fafafa] overflow-hidden h-screen font-SCoreDream'>
 			<div className='font-GmarketSans flex flex-col items-center -space-y-2 mt-14 mb-14'>
 				<span className='font-bold text-[46px]'>
 					실험용<span className='text-green-500'>쥐</span>-마켓
