@@ -45,7 +45,7 @@ const Upload: NextPage = () => {
 			</div>
 			<div className='mt-4 select-none'>
 				<label htmlFor='description' className='font-light text-sm'>
-					상품을 주목하게 할 4마디 랩가사
+					구매자의 심금을 울릴 4마디 랩가사
 				</label>
 				<div>
 					<textarea

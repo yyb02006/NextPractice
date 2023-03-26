@@ -2,13 +2,12 @@ import type { NextPage } from 'next';
 
 const Home: NextPage = () => {
 	return (
-		<div className='bg-[#101010] text-[#fafafa] h-full font-Roboto pt-10 px-4'>
+		<div className='bg-[#101010] text-[#fafafa] h-full font-Roboto pt-12 px-4 space-y-4'>
 			{[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((_, i) => (
 				<div key={i} className='flex flex-col'>
 					<div>
-						<div className='border-b-2 border-gray-700' />
 						<div>
-							<h3 className='font-bold text-3xl mt-10'>
+							<h3 className='font-bold text-3xl'>
 								<span className='text-green-500'>New</span> iPhone 14
 							</h3>
 							<div className='w-full aspect-[1/1] bg-indigo-600 rounded-md mt-1 hover:bg-pink-400 transition-colors'></div>
