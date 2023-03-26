@@ -9,8 +9,8 @@ const Detail: NextPage = () => {
 					<div className='bg-pink-400 w-12 aspect-square rounded-md' />
 					<div>
 						<p className='font-medium text-lg'>Steve Jebs</p>
-						<p className='font-normal text-sm text-gray-500 cursor-pointer hover:text-gray-300 hover:translate-x-1 transition'>
-							View profile &rarr;
+						<p className='font-SCoreDream font-normal text-sm text-gray-500 cursor-pointer hover:text-gray-300 hover:translate-x-1 transition'>
+							자세히 알아보기 &rarr;
 						</p>
 					</div>
 				</div>
@@ -18,7 +18,9 @@ const Detail: NextPage = () => {
 					<h1 className='font-bold text-right text-3xl'>
 						Galaxy <span className='text-green-500'>S50</span>
 					</h1>
-					<p className='font-medium text-right text-base mr-[2px] mt-2'>$140</p>
+					<p className='font-medium text-gray-400 text-right text-base mr-[2px] mt-2'>
+						￦140,000
+					</p>
 					<p className='mt-6 font-light leading-[32px]'>
 						My money&apos;s in that office, right? If she start giving me some
 						bullshit about it ain&apos;t there, and we got to go someplace else
@@ -30,8 +32,8 @@ const Detail: NextPage = () => {
 						motherfucker to get shot. You understand?
 					</p>
 					<div className='relative mt-10 flex justify-start h-10'>
-						<button className='z-[1] bg-green-600 w-full rounded-md font-medium text-lg hover:bg-emerald-500 transition-colors focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-[#101010]'>
-							Talk to seller
+						<button className='z-[1] bg-green-600 w-full rounded-md font-SCoreDream font-medium text-lg hover:bg-emerald-500 transition-colors focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-[#101010]'>
+							판매자와 한 판 승부
 						</button>
 						<button className='pl-5 pr-3 group bg-indigo-600 hover:bg-pink-400 -ml-2 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 focus:ring-offset-[#101010]'>
 							{/* <div className='right-0 top-0 w-20 h-10 absolute bg-indigo-600 rounded-md group-hover:bg-pink-500 transition-colors '></div> */}
@@ -55,9 +57,9 @@ const Detail: NextPage = () => {
 					</div>
 				</div>
 			</div>
-			<div className='mt-20'>
-				<h2 className='font-semibold text-3xl'>
-					<span className='text-green-500'>Similar</span> items
+			<div className='mt-24'>
+				<h2 className='font-GmarketSans font-semibold text-3xl'>
+					<span className='text-green-500'>더! 더! 많은</span> 갈-락-시
 				</h2>
 				<div className='mt-2 grid grid-cols-2 gap-x-2 gap-y-2'>
 					{[1, 2, 3, 4, 5, 6].map((_, i) => (
@@ -65,7 +67,7 @@ const Detail: NextPage = () => {
 							<div className='bg-indigo-500 hover:bg-pink-500 w-full aspect-square rounded-md transition-colors' />
 
 							<h3 className='font-medium mt-1'>Galaxy S60</h3>
-							<p className='font-light text-gray-300'>$6</p>
+							<p className='font-light text-gray-400 text-sm'>￦600,000</p>
 						</div>
 					))}
 				</div>
