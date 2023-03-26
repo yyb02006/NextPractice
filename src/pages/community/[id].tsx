@@ -7,7 +7,7 @@ const CommunityPostDetail: NextPage = () => {
 				<div className='bg-gray-400 w-12 aspect-square rounded-lg' />
 				<div>
 					<p className='font-medium text-lg'>Von Neumann</p>
-					<p className='font-SCoreDream font-normal text-xs text-gray-500 cursor-pointer hover:text-gray-300 hover:translate-x-1 transition'>
+					<p className='font-SCoreDream font-normal text-xs text-gray-400 cursor-pointer hover:text-gray-300 hover:translate-x-1 transition'>
 						자세히 알아보기 &rarr;
 					</p>
 				</div>
