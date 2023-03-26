@@ -1,50 +1,96 @@
 import { useState } from 'react';
 
+function clsNm(...classname: string[]) {
+	return classname.join(' ');
+}
+
 export default function Enter() {
 	const [method, setMethod] = useState<'email' | 'phone'>('email');
 	const onEmailClick = () => setMethod('email');
 	const onPhoneClick = () => setMethod('phone');
 	return (
-		<div>
-			<h3 className='font-sans'>Enter to Carrot</h3>
-			<div>
-				<div>
-					<h5>Enter using:</h5>
-					<div>
-						<button onClick={onEmailClick}>Email</button>
-						<button onClick={onPhoneClick}>Phone</button>
+		<div className='bg-[#101010] text-[#fafafa] border-[#fafafa] overflow-hidden h-screen font-SCoreDream antialiased'>
+			<div className='font-GmarketSans flex flex-col items-center -space-y-2 mt-14 mb-14'>
+				<span className='font-bold text-[46px]'>
+					실험용<span className='text-green-500'>쥐</span>-마켓
+				</span>
+				<span className='font-bold text-2xl'>
+					자, 로그인을 해보도록 하<span className='text-green-500'>쥐</span>
+				</span>
+			</div>
+			<div className='px-8'>
+				<div className='flex flex-col items-center space-y-10'>
+					<h5 className='text-gray-500 text-sm font-medium'>
+						우린 두 가지만 제공하<span className='text-green-700'>쥐</span>
+					</h5>
+					<div className='grid grid-cols-2 w-full font-medium'>
+						<button
+							onClick={onEmailClick}
+							className={clsNm(
+								'border-b-2 pb-3 border-gray-400 transition-color duration-200',
+								method === 'email' ? ' border-green-500 text-green-500' : ''
+							)}
+						>
+							이-메일
+						</button>
+						<button
+							onClick={onPhoneClick}
+							className={clsNm(
+								'border-b-2 pb-3 border-gray-400 transition-color duration-200',
+								method === 'phone' ? ' border-green-500 text-green-500' : ''
+							)}
+						>
+							님폰없?
+						</button>
 					</div>
 				</div>
-				<form>
-					<label>
-						{method === 'email' ? 'Email address' : null}
-						{method === 'phone' ? 'Phone number' : null}
+				<form className='flex flex-col item mt-4'>
+					<label className='font-normal text-sm text-gray-300'>
+						{method === 'email' ? '이-메일 어드레-쓰' : null}
+						{method === 'phone'
+							? '정말 나 원하는 게 하나이쏘 ~ 니 전화번호'
+							: null}
 					</label>
-					<div>
-						{method === 'email' ? <input type='email' required /> : null}
+					<div className='mt-2 mb-4'>
+						{method === 'email' ? (
+							<input
+								type='email'
+								className='appearance-none w-full bg-gray-200 rounded-sm placeholder-gray-400 font-medium outline-none focus:border-green-600 focus:ring-[2px] focus:ring-green-600'
+								placeholder='abcd@gmail.com'
+								required
+							/>
+						) : null}
 						{method === 'phone' ? (
-							<div>
-								<span>+82</span>
-								<input type='number' required />
+							<div className='flex'>
+								<span className='flex justify-center items-center border border-r-0 border-gray-500 text-gray-400 text-sm px-3 rounded-l-sm select-none font-medium'>
+									+82
+								</span>
+								<input
+									className='appearance-none w-full bg-gray-200 border-gray-300 text-[#101010] focus:border-green-600 focus:ring-[2px] focus:ring-green-600 rounded-r-sm'
+									type='number'
+									required
+								/>
 							</div>
 						) : null}
 					</div>
-					<button>
-						{method === 'email' ? 'Get login link' : null}
-						{method === 'phone' ? 'Get one-time password' : null}
+					<button className='bg-green-600 rounded-sm py-2 hover:bg-emerald-500 font-medium focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-color duration-100'>
+						{method === 'email' ? '이메일 로그인' : null}
+						{method === 'phone' ? '님폰있!' : null}
 					</button>
 				</form>
 				<div>
-					<div>
-						<div />
-						<div>
-							<span>Or enter with</span>
+					<div className='relative overflow-hidden'>
+						<div className='absolute border-b-[1px] w-full top-6 border-gray-500' />
+						<div className='relative text-center mt-4 font-normal text-xs text-gray-300'>
+							<span className='bg-[#101010] px-2'>
+								어떻게든 로그인 시도해보기
+							</span>
 						</div>
 					</div>
-					<div>
-						<button>
+					<div className='grid grid-cols-2 mt-4 gap-4'>
+						<button className='flex justify-center items-center py-2 outline outline-1 outline-gray-500 rounded-md hover:outline-green-700 hover:outline-2 hover:bg-[#202020] transition-color duration-100'>
 							<svg
-								className='w-5 h-5'
+								className='w-6 aspect-square'
 								aria-hidden='true'
 								fill='currentColor'
 								viewBox='0 0 20 20'
@@ -52,9 +98,9 @@ export default function Enter() {
 								<path d='M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84' />
 							</svg>
 						</button>
-						<button>
+						<button className='flex justify-center items-center py-2 outline outline-1 outline-gray-500 rounded-md hover:outline-green-700 hover:outline-2 hover:bg-[#202020] transition-color duration-100'>
 							<svg
-								className='w-5 h-5'
+								className='w-6 aspect-square'
 								aria-hidden='true'
 								fill='currentColor'
 								viewBox='0 0 20 20'

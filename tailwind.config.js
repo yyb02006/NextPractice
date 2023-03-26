@@ -1,16 +1,19 @@
-/** @type {import('tailwindcss').Config} */
 const defaultTheme = require('tailwindcss/defaultTheme');
 
+/** @type {import('tailwindcss').Config} */
 module.exports = {
 	content: [
 		'./src/pages/**/*.{js,jsx,ts,tsx}',
 		'./src/components/**/*.{js,jsx,ts,tsx}',
 	],
 	theme: {
-		extend: {},
-		fontFamily: {
-			sans: ['S-core', ...defaultTheme.fontFamily.sans],
+		extend: {
+			fontFamily: {
+				SCoreDream: ['SCoreDream', ...defaultTheme.fontFamily.sans],
+				Pretendard: ['Pretendard', ...defaultTheme.fontFamily.sans],
+				GmarketSans: ['GmarketSans', ...defaultTheme.fontFamily.sans],
+			},
 		},
 	},
-	plugins: [],
+	plugins: [require('@tailwindcss/forms')],
 };
