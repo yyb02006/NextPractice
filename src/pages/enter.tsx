@@ -45,12 +45,7 @@ export default function Enter() {
 					</div>
 				</div>
 				<form className='flex flex-col item mt-4'>
-					<label
-						htmlFor={`${
-							method === 'email' ? 'email' : method === 'phone' ? 'phone' : ''
-						}`}
-						className='font-normal text-sm text-gray-300'
-					>
+					<label htmlFor='input' className='font-normal text-sm text-gray-300'>
 						{method === 'email' ? '이-메일 어드레-쓰' : null}
 						{method === 'phone' ? 'One call Away - Charlie puth' : null}
 					</label>
@@ -58,7 +53,7 @@ export default function Enter() {
 						{method === 'email' ? (
 							<input
 								type='email'
-								id='email'
+								id='input'
 								className='appearance-none w-full bg-gray-200 rounded-sm placeholder-gray-400 font-medium outline-none focus:border-green-600 focus:ring-[2px] focus:ring-green-600'
 								placeholder='abcd@gmail.com'
 								required
@@ -72,7 +67,7 @@ export default function Enter() {
 								<input
 									className='appearance-none w-full bg-gray-200 border-gray-300 text-[#101010] placeholder-gray-400 font-medium focus:border-green-600 focus:ring-[2px] focus:ring-green-600 rounded-r-sm'
 									type='number'
-									id='phone'
+									id='input'
 									placeholder='010-1234-5678'
 									required
 								/>

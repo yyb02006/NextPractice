@@ -138,7 +138,7 @@ const Profile: NextPage = () => {
 					</div>
 					<div />
 				</div>
-				<div className='mt-2 text-gray-200'>
+				<div className='mt-2 text-gray-300 text-sm leading-6 font-light'>
 					<p>
 						Normally, both your asses would be dead as fucking fried chicken,
 						but you happen to pull this shit while I&apos;m in a transitional
