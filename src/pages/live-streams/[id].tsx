@@ -3,17 +3,19 @@ import type { NextPage } from 'next';
 const LiveStreamDetail: NextPage = () => {
 	return (
 		<div className='bg-[#101010] text-[#fafafa] h-full min-h-screen font-SCoreDream py-12'>
-			<div className='w-full px-4'>
+			<div className='w-full'>
 				<div className='w-full bg-indigo-500 aspect-video rounded-sm'></div>
-				<h3 className='mt-3 font-GmarketSans font-bold text-xl text-gray-200'>
-					우리 스마트폰이 달라졌어요!
-				</h3>
-				<div className='flex justify-between font-normal text-xs text-gray-400'>
-					<span>iphone_15_Pro_owner 님의 라이브</span>
-					<span>2시간째 방송중</span>
+				<div className='px-4'>
+					<h3 className='mt-3 font-GmarketSans font-bold text-xl text-gray-200'>
+						우리 스마트폰이 달라졌어요!
+					</h3>
+					<div className='flex justify-between font-normal text-xs text-gray-400'>
+						<span>iphone_15_Pro_owner 님의 라이브</span>
+						<span>2시간째 방송중</span>
+					</div>
 				</div>
 			</div>
-			<div className='mt-16 h-[42vh] overflow-y-scroll scroll-'>
+			<div className='mt-16 h-[40vh] overflow-y-scroll scroll-'>
 				<div className='flex items-start gap-2 mt-4 bg-[#1a1a1a] p-4'>
 					<div className='bg-pink-400 w-8 aspect-square rounded-md' />
 					<div>

@@ -23,7 +23,7 @@ const Upload: NextPage = () => {
 				</label>
 			</div>
 			<div className='mt-6 select-none'>
-				<label htmlFor='price' className='font-light text-sm'>
+				<label htmlFor='price' className='font-normal text-xs'>
 					희망 상품금액
 				</label>
 				<div className='relative mt-2 flex items-center'>
@@ -44,17 +44,15 @@ const Upload: NextPage = () => {
 				</div>
 			</div>
 			<div className='mt-4 select-none'>
-				<label htmlFor='description' className='font-light text-sm'>
+				<label htmlFor='description' className='font-normal text-xs'>
 					구매자의 심금을 울릴 4마디 랩가사
 				</label>
-				<div>
-					<textarea
-						rows={4}
-						id='description'
-						className='appearance-none mt-2 text-gray-600 w-full bg-gray-200 rounded-sm placeholder-gray-400 outline-none focus:border-green-600 focus:ring-[2px] focus:ring-green-600'
-						placeholder='이해를 두 번 해도 일만 나면 오해'
-					/>
-				</div>
+				<textarea
+					rows={4}
+					id='description'
+					className='appearance-none mt-2 text-gray-600 w-full bg-gray-200 rounded-sm placeholder-gray-400 outline-none focus:border-green-600 focus:ring-[2px] focus:ring-green-600'
+					placeholder='이해를 두 번 해도 일만 나면 오해'
+				/>
 			</div>
 			<button className='mt-4 w-full bg-green-600 rounded-sm py-2 hover:bg-emerald-500 font-medium focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-color duration-100'>
 				상품 던지기
