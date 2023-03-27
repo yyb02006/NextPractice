@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { clsNm } from '@/libs/utils';
+import Input from '@/components/input';
+import Button from '@/components/button';
 
 export default function Enter() {
 	const [method, setMethod] = useState<'email' | 'phone'>('email');
@@ -15,7 +17,7 @@ export default function Enter() {
 					자, 로그인을 해보도록 하<span className='text-green-500'>쥐</span>
 				</span>
 			</div>
-			<div className='px-8'>
+			<div className='px-4'>
 				<div className='flex flex-col items-center space-y-10'>
 					<h5 className='text-gray-500 text-sm font-medium'>
 						우린 두 가지만 제공하<span className='text-green-700'>쥐</span>
@@ -41,40 +43,27 @@ export default function Enter() {
 						</button>
 					</div>
 				</div>
-				<form className='flex flex-col item mt-4'>
-					<label htmlFor='input' className='font-normal text-sm text-gray-300'>
-						{method === 'email' ? '이-메일 어드레-쓰' : null}
-						{method === 'phone' ? 'One call Away - Charlie puth' : null}
-					</label>
-					<div className='mt-2 mb-4'>
-						{method === 'email' ? (
-							<input
-								type='email'
-								id='input'
-								className='appearance-none w-full bg-gray-200 rounded-sm placeholder-gray-400 font-medium outline-none focus:border-green-600 focus:ring-[2px] focus:ring-green-600'
-								placeholder='abcd@gmail.com'
-								required
-							/>
-						) : null}
-						{method === 'phone' ? (
-							<div className='flex'>
-								<span className='flex justify-center items-center border border-r-0 border-gray-500 text-gray-400 text-sm px-3 rounded-l-sm select-none font-medium'>
-									+82
-								</span>
-								<input
-									className='appearance-none w-full bg-gray-200 border-gray-300 text-[#101010] placeholder-gray-400 font-medium focus:border-green-600 focus:ring-[2px] focus:ring-green-600 rounded-r-sm'
-									type='number'
-									id='input'
-									placeholder='010-1234-5678'
-									required
-								/>
-							</div>
-						) : null}
-					</div>
-					<button className='bg-green-600 rounded-sm py-2 hover:bg-emerald-500 font-medium focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-color duration-100'>
-						{method === 'email' ? '이메일 로그인' : null}
-						{method === 'phone' ? '님폰있!' : null}
-					</button>
+				<form className='flex flex-col item space-y-4 mt-4'>
+					{method === 'email' ? (
+						<Input
+							kind='email'
+							label='이-메일 어드레-쓰'
+							name='email'
+							placeholder='abcd@efg.com'
+							required
+						/>
+					) : null}
+					{method === 'phone' ? (
+						<Input
+							kind='phone'
+							label='One call Away - Charlie puth'
+							name='phone'
+							placeholder='010-5555-5555'
+							required
+						/>
+					) : null}
+					{method === 'email' ? <Button name='이메일 로그인'></Button> : null}
+					{method === 'phone' ? <Button name='나폰있!'></Button> : null}
 				</form>
 				<div>
 					<div className='relative overflow-hidden'>

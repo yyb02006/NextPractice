@@ -1,18 +1,21 @@
+import Layout from '@/components/layout';
 import type { NextPage } from 'next';
+import Button from '@/components/button';
+import TextArea from '@/components/textarea';
 
 const Write: NextPage = () => {
 	return (
-		<form className='bg-[#101010] text-[#fafafa] h-full min-h-screen font-SCoreDream px-4 py-12'>
-			<textarea
-				rows={4}
-				id='description'
-				className='appearance-none border-transparent mt-2 text-gray-600 w-full bg-gray-200 rounded-sm placeholder-gray-400 outline-none focus:border-green-600 focus:ring-[2px] focus:ring-green-600'
-				placeholder='난 내가 누군지 몰라 이세상을 헤맬 뿐야'
-			/>
-			<button className='mt-4 w-full bg-green-600 rounded-sm py-2 hover:bg-emerald-500 font-medium focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-color duration-100'>
-				쥐-마켓 쥐-식인 믿어보기
-			</button>
-		</form>
+		<Layout canGoBack={true}>
+			<form className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12 space-y-4'>
+				<TextArea
+					label='궁금한 것이 있나요?'
+					name='question'
+					placeholder='난 내가 누군지 몰라 이 세상을 헤맬뿐야'
+					rows={4}
+				></TextArea>
+				<Button name='쥐-마켓 쥐-식인 믿어보기'></Button>
+			</form>
+		</Layout>
 	);
 };
 

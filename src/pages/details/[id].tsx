@@ -4,7 +4,7 @@ import type { NextPage } from 'next';
 const Detail: NextPage = () => {
 	return (
 		<Layout title='상세정보' canGoBack={true}>
-			<div className='bg-[#101010] text-[#fafafa] h-full font-Roboto px-4 py-12'>
+			<div className='bg-[#101010] text-[#fafafa] font-Roboto px-4 py-12'>
 				<div>
 					<div className='bg-indigo-600 w-full aspect-square rounded-md' />
 					<div className='flex items-center gap-2 mt-4'>

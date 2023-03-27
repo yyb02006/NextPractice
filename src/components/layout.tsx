@@ -22,7 +22,7 @@ export default function Layout({
 	};
 
 	return (
-		<div className='bg-[#101010] relative'>
+		<div className='bg-[#101010] h-full min-h-screen relative'>
 			<div className='fixed max-w-lg px-4 h-[60px] bg-[#1a1a1a] shadow-md shadow-[#0a0a0a] w-full text-[20px] text-[#fafafa] font-bold font-GmarketSans top-0 flex items-center'>
 				{canGoBack ? (
 					<button
@@ -148,7 +148,6 @@ export default function Layout({
 			) : (
 				''
 			)}
-			;
 		</div>
 	);
 }

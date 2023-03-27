@@ -1,19 +1,23 @@
+import FloatingButton from '@/components/floating-button';
 import Layout from '@/components/layout';
 import type { NextPage } from 'next';
+import Link from 'next/link';
 
 const Community: NextPage = () => {
 	return (
 		<Layout title='질문 & 답변' hasTabBar={true}>
-			<div className='bg-[#101010] text-[#fafafa] h-full min-h-screen font-SCoreDream px-4 py-12 space-y-16'>
+			<div className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12 space-y-16'>
 				{[1, 1, 1, 1, 1, 1, 1].map((arr, i) => (
 					<div key={i} className='flex flex-col'>
-						<span className='font-GmarketSans font-bold text-xl'>
-							<span className='text-green-500'>#콤-퓨타</span>
+						<span className='text-green-500 font-GmarketSans font-bold text-xl'>
+							#콤-퓨타
 						</span>
-						<span className='mt-1'>
-							<span className='text-xl text-pink-400'>Q.</span> 컴퓨터를 샀는데
-							HDMI를 어디다 끼우는 거죠ㅠㅠ?
-						</span>
+						<Link href='/communities/id'>
+							<span className='mt-1'>
+								<span className='mt-1 text-xl text-pink-400'>Q.</span> 컴퓨터를
+								샀는데 HDMI를 어디다 끼우는 거죠ㅠㅠ?
+							</span>
+						</Link>
 						<div className='mt-8 flex justify-start font-normal text-xs text-gray-400 gap-2'>
 							<span>Von Neumann</span>
 							<span className='text-gray-600 font-medium'>18시간 전</span>
@@ -56,7 +60,7 @@ const Community: NextPage = () => {
 						</div>
 					</div>
 				))}
-				<button className='fixed flex justify-center items-center shadow-md shadow-green-800 bg-green-600 w-12 aspect-square rounded-full bottom-8 right-6 hover:bg-emerald-500 transition-colors'>
+				<FloatingButton href='/communities/write'>
 					<svg
 						className='w-6 h-6'
 						fill='none'
@@ -71,7 +75,7 @@ const Community: NextPage = () => {
 							d='M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z'
 						></path>
 					</svg>
-				</button>
+				</FloatingButton>
 			</div>
 		</Layout>
 	);
