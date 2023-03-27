@@ -15,7 +15,7 @@ function clsNm(...classname: string[]) {
 
 export default function App({ Component, pageProps }: AppProps) {
 	return (
-		<main className={clsNm(roboto.variable)}>
+		<main className={clsNm(roboto.variable) + `w-full max-w-lg mx-auto`}>
 			<Component {...pageProps} />
 		</main>
 	);
