@@ -1,5 +1,6 @@
 import Layout from '@/components/layout';
 import type { NextPage } from 'next';
+import Button from '@/components/button';
 
 const Detail: NextPage = () => {
 	return (
@@ -33,11 +34,11 @@ const Detail: NextPage = () => {
 							in there, and that ni**a Winston or anybody else is in there, you
 							the first motherfucker to get shot. You understand?
 						</p>
-						<div className='relative mt-10 flex justify-start h-10'>
-							<button className='z-[1] bg-green-600 w-full rounded-md font-SCoreDream font-medium text-lg hover:bg-emerald-500 transition-colors focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-[#101010]'>
-								판매자와 한 판 승부
-							</button>
-							<button className='pl-5 pr-3 group bg-indigo-600 hover:bg-pink-400 -ml-2 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 focus:ring-offset-[#101010]'>
+						<div className='mt-10 flex justify-start h-10'>
+							<div className='z-[1] w-full'>
+								<Button name='판매자와 한 판 승부'></Button>
+							</div>
+							<button className='pl-5 pr-3 group bg-indigo-600 hover:bg-pink-400 -ml-2 rounded-sm transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 focus:ring-offset-[#101010]'>
 								{/* <div className='right-0 top-0 w-20 h-10 absolute bg-indigo-600 rounded-md group-hover:bg-pink-500 transition-colors '></div> */}
 								<svg
 									className='relative h-6 w-6 '

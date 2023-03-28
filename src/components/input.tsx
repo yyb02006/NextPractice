@@ -1,8 +1,8 @@
 interface InputProps {
-	label: string;
+	kind: 'text' | 'email' | 'price' | 'phone' | 'etc';
 	name: string;
-	kind: 'text' | 'email' | 'price' | 'phone';
-	placeholder: string;
+	label?: string;
+	placeholder?: string;
 	[key: string]: any;
 }
 
@@ -11,13 +11,16 @@ export default function Input({
 	label,
 	name,
 	placeholder,
+	/**rest로 받는 parameter는 interface에 부합하는 범위에서 unlimited argument(무한인자)를 받을 수 있다.*/
 	...rest
 }: InputProps) {
 	return (
 		<div className='flex flex-col item space-y-2 select-none'>
-			<label htmlFor={name} className='font-medium text-xs text-gray-300'>
-				{label}
-			</label>
+			{label ? (
+				<label htmlFor={name} className='font-medium text-xs text-gray-300'>
+					{label}
+				</label>
+			) : null}
 			{kind === 'text' ? (
 				<input
 					type='text'
@@ -66,6 +69,14 @@ export default function Input({
 						{...rest}
 					/>
 				</div>
+			) : null}
+			{kind === 'etc' ? (
+				<input
+					id={name}
+					placeholder={placeholder}
+					className='appearance-none text-gray-600 w-full bg-gray-200 rounded-sm placeholder-gray-400 outline-none focus:border-green-600 focus:ring-[2px] focus:ring-green-600'
+					{...rest}
+				/>
 			) : null}
 		</div>
 	);

@@ -9,7 +9,7 @@ const chat: NextPage = () => {
 				{[1, 2, 3, 4, 5, 6, 7, 8, 9].map((arr, i) => (
 					<div key={i}>
 						<ChatRoom
-							id={arr[i]}
+							id={arr}
 							name='Steve Jebs'
 							text='프론트엔드의 아름다움을 모르는 당신이 불쌍해요!'
 						>
