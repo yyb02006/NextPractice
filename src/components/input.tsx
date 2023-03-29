@@ -1,8 +1,12 @@
+import { UseFormRegisterReturn } from 'react-hook-form';
+
 interface InputProps {
 	kind: 'text' | 'email' | 'price' | 'phone' | 'etc';
 	name: string;
 	label?: string;
 	placeholder?: string;
+	register: UseFormRegisterReturn;
+	required: boolean;
 	[key: string]: any;
 }
 
@@ -11,6 +15,11 @@ export default function Input({
 	label,
 	name,
 	placeholder,
+	register,
+	/**required를 매개변수로 선언하고 실제 input element에는 넣지 않았을때?
+	 * required가 매개변수에 포함되어있기 때문에 ...rest에 속하지 않게 됨 즉, 아래에 있는 input element에 전달되지 않음
+	 */
+	required,
 	/**rest로 받는 parameter는 interface에 부합하는 범위에서 unlimited argument(무한인자)를 받을 수 있다.*/
 	...rest
 }: InputProps) {
@@ -27,6 +36,8 @@ export default function Input({
 					id={name}
 					placeholder={placeholder}
 					className='appearance-none text-gray-600 w-full bg-gray-200 rounded-sm placeholder-gray-400 outline-none focus:border-green-600 focus:ring-[2px] focus:ring-green-600'
+					required={required}
+					{...register}
 					{...rest}
 				/>
 			) : null}
@@ -36,6 +47,8 @@ export default function Input({
 					id={name}
 					className='appearance-none w-full bg-gray-200 rounded-sm placeholder-gray-400 font-medium outline-none focus:border-green-600 focus:ring-[2px] focus:ring-green-600'
 					placeholder={placeholder}
+					required={required}
+					{...register}
 					{...rest}
 				/>
 			) : null}
@@ -49,6 +62,8 @@ export default function Input({
 						id={name}
 						placeholder={placeholder}
 						className='appearance-none text-gray-600 pl-8 pr-12 w-full bg-gray-200 rounded-sm placeholder-gray-400 outline-none focus:border-green-600 focus:ring-[2px] focus:ring-green-600'
+						required={required}
+						{...register}
 						{...rest}
 					/>
 					<span className='absolute font-Roboto pr-3 h-full flex items-center font-bold right-0 top-0 text-gray-500'>
@@ -66,6 +81,8 @@ export default function Input({
 						type='number'
 						id={name}
 						placeholder={placeholder}
+						required={required}
+						{...register}
 						{...rest}
 					/>
 				</div>
@@ -75,6 +92,8 @@ export default function Input({
 					id={name}
 					placeholder={placeholder}
 					className='appearance-none text-gray-600 w-full bg-gray-200 rounded-sm placeholder-gray-400 outline-none focus:border-green-600 focus:ring-[2px] focus:ring-green-600'
+					required={required}
+					{...register}
 					{...rest}
 				/>
 			) : null}

@@ -167,7 +167,7 @@ export default function Layout({
 			{hasTabBar ? (
 				<nav className='fixed flex pb-4 h-24 justify-around items-center bottom-0 w-full max-w-lg bg-[#1a1a1a] sha'>
 					{svgs.map((svg, i) => (
-						<Link href={svg.path}>
+						<Link key={i} href={svg.path}>
 							<div
 								className={clsNm(
 									'flex flex-col items-center text-gray-300 space-y-1 w-16',

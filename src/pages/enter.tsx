@@ -2,11 +2,46 @@ import { useState } from 'react';
 import { clsNm } from '@/libs/utils';
 import Input from '@/components/input';
 import Button from '@/components/button';
+import { FieldErrors, useForm } from 'react-hook-form';
+
+interface EnterForm {
+	email: string;
+	phone: string;
+}
 
 export default function Enter() {
+	const [sendingReq, setSendingReq] = useState<'doing' | 'done'>('done');
+	const { register, reset, handleSubmit } = useForm<EnterForm>();
 	const [method, setMethod] = useState<'email' | 'phone'>('email');
-	const onEmailClick = () => setMethod('email');
-	const onPhoneClick = () => setMethod('phone');
+	const onEmailClick = () => {
+		reset();
+		setMethod('email');
+	};
+	const onPhoneClick = () => {
+		reset();
+		setMethod('phone');
+	};
+
+	const onValid = (data: EnterForm) => {
+		setSendingReq('doing');
+		fetch('/api/users/enter', {
+			method: 'POST',
+			body: JSON.stringify(data),
+			/**headers프로퍼티에 Content-Type을 json으로 설정해주면 {"key":"contents"}형식으로 날아가던 데이터가
+			 * {key:contents}형식으로 날아감(json) 때문에 이렇게 해야 서버에서 req.body.key로 데이터를 받을 수 있음.
+			 * express에서 res.json()으로 던진 데이터가 {key:contents}형식이고, axios에서 headers를 지정하는 이유와 같음.
+			 */
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		}).then(() => {
+			setSendingReq('done');
+		});
+	};
+	const onInValid = (err: FieldErrors) => {
+		console.log(err);
+	};
+
 	return (
 		<div className='bg-[#101010] text-[#fafafa] border-[#fafafa] overflow-hidden h-screen font-SCoreDream'>
 			<div className='font-GmarketSans flex flex-col items-center -space-y-2 mt-14 mb-14'>
@@ -43,13 +78,20 @@ export default function Enter() {
 						</button>
 					</div>
 				</div>
-				<form className='flex flex-col item space-y-4 mt-4'>
+				<form
+					onSubmit={handleSubmit(onValid, onInValid)}
+					className='flex flex-col item space-y-4 mt-4'
+				>
 					{method === 'email' ? (
 						<Input
 							kind='email'
 							label='이-메일 어드레-쓰'
 							name='email'
 							placeholder='abcd@efg.com'
+							register={register('email', { required: '이-메일을 넣으야지!' })}
+							/**required를 두 번 쓰면 브라우저의 보호와 서버의 보호를 동시에 받을 수 있음
+							 * html에서 required가 삭제되어도 onInvalid 함수에서 error가 잡힌다.
+							 */
 							required
 						/>
 					) : null}
@@ -59,10 +101,17 @@ export default function Enter() {
 							label='One call Away - Charlie puth'
 							name='phone'
 							placeholder='010-5555-5555'
+							register={register('phone', { required: '님 폰 진짜 없?' })}
 							required
 						/>
 					) : null}
-					{method === 'email' ? <Button name='이메일 로그인'></Button> : null}
+					{method === 'email' ? (
+						sendingReq === 'doing' ? (
+							<Button name='뭐 잠깐 하는중'></Button>
+						) : (
+							<Button name='이메일 로그인'></Button>
+						)
+					) : null}
 					{method === 'phone' ? <Button name='나폰있!'></Button> : null}
 				</form>
 				<div>

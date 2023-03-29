@@ -1,47 +1,52 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
+import { FieldErrors, useForm } from 'react-hook-form';
+
+interface LoginForm {
+	username: string;
+	password: string;
+	email: string;
+}
 
 export default function Forms() {
-	const [username, setUsername] = useState('');
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
-	const onUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const {
-			currentTarget: { value },
-		} = event;
-		setUsername(value);
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+		setValue,
+	} = useForm<LoginForm>({ mode: 'onSubmit' });
+	const onValid = (data: LoginForm) => {
+		console.log(data);
 	};
-	const onEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const {
-			currentTarget: { value },
-		} = event;
-		setUsername(value);
+	const onInvalid = (errors: FieldErrors) => {
+		console.log(errors);
 	};
-	const onPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const {
-			currentTarget: { value },
-		} = event;
-		setUsername(value);
-	};
+	useEffect(() => {
+		setValue('username', 'hello');
+	}, []);
 	return (
-		<form>
+		<form onSubmit={handleSubmit(onValid, onInvalid)}>
 			<input
-				onChange={onUsernameChange}
-				value={username}
+				{...register('username', {
+					required: 'username is required',
+					minLength: { message: '너 이름이 짧구나?', value: 5 },
+				})}
 				type='text'
 				placeholder='Username'
 			/>
 			<input
-				onChange={onEmailChange}
-				value={email}
+				{...register('email', {
+					required: true,
+					validate: {
+						notGmail: (value) =>
+							!value.includes('@gmail.com') || 'gmail is suck',
+					},
+				})}
 				type='email'
 				placeholder='Email'
 			/>
-			<input
-				onChange={onPasswordChange}
-				value={password}
-				type='password'
-				placeholder='Pasword'
-			/>
+			{errors.email?.message}
+			<input {...register('password')} type='password' placeholder='Password' />
+			<input type='submit' value='Create Account' />
 		</form>
 	);
 }
