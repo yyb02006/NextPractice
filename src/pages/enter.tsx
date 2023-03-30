@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { clsNm } from '@/libs/utils';
+import { clsNm } from '@/libs/client/utils';
 import Input from '@/components/input';
 import Button from '@/components/button';
 import { FieldErrors, useForm } from 'react-hook-form';
+import useMutation from '@/libs/client/useMutation';
 
 interface EnterForm {
 	email: string;
@@ -10,6 +11,7 @@ interface EnterForm {
 }
 
 export default function Enter() {
+	const [send, { loading, data, error }] = useMutation('/api/users/enter');
 	const [sendingReq, setSendingReq] = useState<'doing' | 'done'>('done');
 	const { register, reset, handleSubmit } = useForm<EnterForm>();
 	const [method, setMethod] = useState<'email' | 'phone'>('email');
@@ -23,25 +25,12 @@ export default function Enter() {
 	};
 
 	const onValid = (data: EnterForm) => {
-		setSendingReq('doing');
-		fetch('/api/users/enter', {
-			method: 'POST',
-			body: JSON.stringify(data),
-			/**headers프로퍼티에 Content-Type을 json으로 설정해주면 {"key":"contents"}형식으로 날아가던 데이터가
-			 * {key:contents}형식으로 날아감(json) 때문에 이렇게 해야 서버에서 req.body.key로 데이터를 받을 수 있음.
-			 * express에서 res.json()으로 던진 데이터가 {key:contents}형식이고, axios에서 headers를 지정하는 이유와 같음.
-			 */
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		}).then(() => {
-			setSendingReq('done');
-		});
+		send(data);
 	};
 	const onInValid = (err: FieldErrors) => {
 		console.log(err);
 	};
-
+	console.log(loading, data, error);
 	return (
 		<div className='bg-[#101010] text-[#fafafa] border-[#fafafa] overflow-hidden h-screen font-SCoreDream'>
 			<div className='font-GmarketSans flex flex-col items-center -space-y-2 mt-14 mb-14'>

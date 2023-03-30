@@ -1,4 +1,4 @@
-import { clsNm } from '@/libs/utils';
+import { clsNm } from '@/libs/client/utils';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
