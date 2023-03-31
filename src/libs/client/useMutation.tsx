@@ -1,25 +1,20 @@
 import { useState } from 'react';
 
-interface UseMutationState {
+interface UseMutationState<T> {
 	loading: boolean;
-	data: undefined | unknown;
-	error: undefined | unknown;
+	data?: T;
+	error?: object;
 }
 
-interface EnterForm {
-	email: string;
-	phone: string;
-}
+type UseMutation<T> = [(data: unknown) => void, UseMutationState<T>];
 
-type UseMutation = [(data: EnterForm) => void, UseMutationState];
-
-export default function useMutation(url: string): UseMutation {
-	const [mutationState, setMutationState] = useState<UseMutationState>({
+export default function useMutation<T = unknown>(url: string): UseMutation<T> {
+	const [mutationState, setMutationState] = useState<UseMutationState<T>>({
 		loading: false,
 		data: undefined,
 		error: undefined,
 	});
-	const mutation = (data: EnterForm) => {
+	const mutation = (data: unknown) => {
 		setMutationState((p) => ({ ...p, loading: true }));
 		fetch(url, {
 			method: 'POST',

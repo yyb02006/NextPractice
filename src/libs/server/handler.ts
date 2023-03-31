@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export interface ResType {
-	ok: boolean;
+	success: boolean;
 	[key: string]: any;
 }
 

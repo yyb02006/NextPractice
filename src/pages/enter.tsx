@@ -6,14 +6,28 @@ import { FieldErrors, useForm } from 'react-hook-form';
 import useMutation from '@/libs/client/useMutation';
 
 interface EnterForm {
-	email: string;
 	phone: string;
+	email: string;
+}
+
+interface TokenForm {
+	token: string;
+}
+
+interface useMutationResult {
+	success: boolean;
 }
 
 export default function Enter() {
-	const [send, { loading, data, error }] = useMutation('/api/users/enter');
-	const [sendingReq, setSendingReq] = useState<'doing' | 'done'>('done');
+	const [send, { loading, data, error }] =
+		useMutation<useMutationResult>('/api/users/enter');
+	const [
+		sendToken,
+		{ loading: tokenLoading, data: tokenData, error: tokenError },
+	] = useMutation<useMutationResult>('/api/users/confirm');
 	const { register, reset, handleSubmit } = useForm<EnterForm>();
+	const { register: tokenRegister, handleSubmit: tokenHandleSubmit } =
+		useForm<TokenForm>();
 	const [method, setMethod] = useState<'email' | 'phone'>('email');
 	const onEmailClick = () => {
 		reset();
@@ -24,11 +38,13 @@ export default function Enter() {
 		setMethod('phone');
 	};
 
-	const onValid = (data: EnterForm) => {
-		send(data);
+	const onValid = (validData: EnterForm) => {
+		if (loading) return;
+		send(validData);
 	};
-	const onInValid = (err: FieldErrors) => {
-		console.log(err);
+	const onTokenValid = (validData: TokenForm) => {
+		if (loading) return;
+		sendToken(validData);
 	};
 	console.log(loading, data, error);
 	return (
@@ -42,67 +58,112 @@ export default function Enter() {
 				</span>
 			</div>
 			<div className='px-4'>
-				<div className='flex flex-col items-center space-y-10'>
-					<h5 className='text-gray-500 text-sm font-medium'>
-						우린 두 가지만 제공하<span className='text-green-700'>쥐</span>
-					</h5>
-					<div className='grid grid-cols-2 w-full font-medium'>
-						<button
-							onClick={onEmailClick}
-							className={clsNm(
-								'border-b-2 pb-3 border-gray-400 transition-color duration-200',
-								method === 'email' ? ' border-green-500 text-green-500' : ''
-							)}
+				{data?.success ? (
+					<>
+						<div className='flex flex-col items-center space-y-10'>
+							{method === 'email' ? (
+								<h5 className='text-gray-500 text-sm font-medium'>
+									이메일을 확인 해보시<span className='text-green-700'>쥐</span>
+								</h5>
+							) : null}
+							{method === 'phone' ? (
+								<h5 className='text-gray-500 text-sm font-medium'>
+									핸드폰을 확인 해보시<span className='text-green-700'>쥐</span>
+								</h5>
+							) : null}
+						</div>
+						<form
+							onSubmit={tokenHandleSubmit(onTokenValid)}
+							className='flex flex-col item space-y-4 mt-4'
 						>
-							이-메일
-						</button>
-						<button
-							onClick={onPhoneClick}
-							className={clsNm(
-								'border-b-2 pb-3 border-gray-400 transition-color duration-200',
-								method === 'phone' ? ' border-green-500 text-green-500' : ''
+							<Input
+								kind='etc'
+								label='어이, 암호는?'
+								name='token'
+								placeholder=''
+								register={tokenRegister('token', {
+									required: '이-메일을 넣으야지!',
+								})}
+								required
+								type='number'
+							/>
+							{loading ? (
+								<Button name='ㅎㅎ잠만여'></Button>
+							) : (
+								<Button name='암호를 대라'></Button>
 							)}
+						</form>
+					</>
+				) : (
+					<>
+						<div className='flex flex-col items-center space-y-10'>
+							<h5 className='text-gray-500 text-sm font-medium'>
+								우린 두 가지만 제공하<span className='text-green-700'>쥐</span>
+							</h5>
+							<div className='grid grid-cols-2 w-full font-medium'>
+								<button
+									onClick={onEmailClick}
+									className={clsNm(
+										'border-b-2 pb-3 border-gray-400 transition-color duration-200',
+										method === 'email' ? ' border-green-500 text-green-500' : ''
+									)}
+								>
+									이-메일
+								</button>
+								<button
+									onClick={onPhoneClick}
+									className={clsNm(
+										'border-b-2 pb-3 border-gray-400 transition-color duration-200',
+										method === 'phone' ? ' border-green-500 text-green-500' : ''
+									)}
+								>
+									님폰없?
+								</button>
+							</div>
+						</div>
+						<form
+							onSubmit={handleSubmit(onValid)}
+							className='flex flex-col item space-y-4 mt-4'
 						>
-							님폰없?
-						</button>
-					</div>
-				</div>
-				<form
-					onSubmit={handleSubmit(onValid, onInValid)}
-					className='flex flex-col item space-y-4 mt-4'
-				>
-					{method === 'email' ? (
-						<Input
-							kind='email'
-							label='이-메일 어드레-쓰'
-							name='email'
-							placeholder='abcd@efg.com'
-							register={register('email', { required: '이-메일을 넣으야지!' })}
-							/**required를 두 번 쓰면 브라우저의 보호와 서버의 보호를 동시에 받을 수 있음
-							 * html에서 required가 삭제되어도 onInvalid 함수에서 error가 잡힌다.
-							 */
-							required
-						/>
-					) : null}
-					{method === 'phone' ? (
-						<Input
-							kind='phone'
-							label='One call Away - Charlie puth'
-							name='phone'
-							placeholder='010-5555-5555'
-							register={register('phone', { required: '님 폰 진짜 없?' })}
-							required
-						/>
-					) : null}
-					{method === 'email' ? (
-						sendingReq === 'doing' ? (
-							<Button name='뭐 잠깐 하는중'></Button>
-						) : (
-							<Button name='이메일 로그인'></Button>
-						)
-					) : null}
-					{method === 'phone' ? <Button name='나폰있!'></Button> : null}
-				</form>
+							{method === 'email' ? (
+								<Input
+									kind='email'
+									label='이-메일 어드레-쓰'
+									name='email'
+									placeholder='abcd@efg.com'
+									register={register('email', {
+										required: '이-메일을 넣으야지!',
+									})}
+									required
+								/>
+							) : null}
+							{method === 'phone' ? (
+								<Input
+									kind='phone'
+									label='One call Away - Charlie puth'
+									name='phone'
+									placeholder='010-5555-5555'
+									register={register('phone', { required: '님 폰 진짜 없?' })}
+									required
+								/>
+							) : null}
+							{method === 'email' ? (
+								loading ? (
+									<Button name='뭐 잠깐 하는중'></Button>
+								) : (
+									<Button name='이메일 로그인'></Button>
+								)
+							) : null}
+							{method === 'phone' ? (
+								loading ? (
+									<Button name='나...폰...!'></Button>
+								) : (
+									<Button name='나폰있!'></Button>
+								)
+							) : null}
+						</form>
+					</>
+				)}
 				<div>
 					<div className='relative overflow-hidden'>
 						<div className='absolute border-b-[1px] w-full top-6 border-gray-500' />
