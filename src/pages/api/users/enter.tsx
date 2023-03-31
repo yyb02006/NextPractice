@@ -2,6 +2,20 @@ import twilio from 'twilio';
 import { NextApiRequest, NextApiResponse } from 'next';
 import client from '@/libs/server/client';
 import handler, { ResType } from '@/libs/server/handler';
+import nodemailer from 'nodemailer';
+
+const transporter = nodemailer.createTransport({
+	service: 'naver',
+	port: 587,
+	host: 'smtp.naver.com',
+	tls: {
+		rejectUnauthorized: false,
+	},
+	auth: {
+		user: process.env.NAVER_USER,
+		pass: process.env.NAVER_PASS,
+	},
+});
 
 const twilioClient = twilio(
 	process.env.TWILIO_ACCOUNT_SID,
@@ -36,6 +50,20 @@ async function handlerAction(
 			//!를 붙이면 undefined가능성을 버릴 수 있어서 string | undefined타입이 string으로 바뀜
 			to: process.env.TWILIO_TO_PHONE_NUMBER!,
 		});
+	} else if (email) {
+		await transporter.sendMail(
+			{
+				from: process.env.NAVER_USER,
+				to: process.env.NAVER_TO_TEST_ADRESS,
+				subject: 'Hello Im Lab-G Rat Man',
+				text: `Your Code is ${payload}.`,
+			},
+			(err, info) => {
+				if (err) {
+					console.log(err);
+				} else console.log('success');
+			}
+		);
 	}
 	// let user;
 	// if (email) {
