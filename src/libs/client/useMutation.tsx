@@ -32,7 +32,7 @@ export default function useMutation(url: string): UseMutation {
 				'Content-Type': 'application/json',
 			},
 		})
-			/**에로우펑션 쓸 때는 return에 주의하자 */
+			/**then메소드에서 에로우펑션 쓸 때는 return에 주의하자 */
 			.then((res) => res.json().catch(() => {}))
 			.then((data) => setMutationState((p) => ({ ...p, data: data })))
 			.catch((err) => setMutationState((p) => ({ ...p, error: err })))

@@ -1,22 +1,42 @@
+import twilio from 'twilio';
 import { NextApiRequest, NextApiResponse } from 'next';
 import client from '@/libs/server/client';
-import handler from '@/libs/server/handler';
+import handler, { ResType } from '@/libs/server/handler';
 
-async function handlerAction(req: NextApiRequest, res: NextApiResponse) {
+const twilioClient = twilio(
+	process.env.TWILIO_ACCOUNT_SID,
+	process.env.TWILIO_AUTH_TOKEN
+);
+
+async function handlerAction(
+	req: NextApiRequest,
+	res: NextApiResponse<ResType>
+) {
 	/**req.body 객체에 있는 email key의 value가 {email}로 바로 들어감 */
 	const { phone, email } = req.body;
+	const reqData = phone ? { phone: Number(phone) } : email ? { email } : {};
+	if (!reqData) return res.status(400).json({ ok: false });
 	/**payload란 데이터를 전송할 때 header나 error, status와 같은 부가적인 요소를 제외한 순수한 data자체를 말함*/
-	const payload = phone ? { phone: Number(phone) } : email ? { email } : {};
-	const user = await client.user.upsert({
-		/**...obj는 obj안의 property들을 펼쳐서 리턴. {...{key:value,weight:volume}} = {key:value,weight:volume} */
-		where: { ...payload },
-		create: {
-			name: 'Anonymous',
-			...payload,
+	const payload = Math.floor(100000 + Math.random() * 900000) + '';
+	const token = await client.token.create({
+		data: {
+			payload,
+			user: {
+				connectOrCreate: {
+					where: { ...reqData },
+					create: { name: 'Anonymous', ...reqData },
+				},
+			},
 		},
-		update: {},
 	});
-
+	if (phone) {
+		await twilioClient.messages.create({
+			messagingServiceSid: process.env.TWILIO_MESSAGE_SID,
+			body: `Hello Master, your authentication number is ${payload}.`,
+			//!를 붙이면 undefined가능성을 버릴 수 있어서 string | undefined타입이 string으로 바뀜
+			to: process.env.TWILIO_TO_PHONE_NUMBER!,
+		});
+	}
 	// let user;
 	// if (email) {
 	// 	user = await client.user.findUnique({
@@ -55,8 +75,9 @@ async function handlerAction(req: NextApiRequest, res: NextApiResponse) {
 	// 		  })));
 	// 	console.log(user);
 	// }
+	console.log(token);
 
-	res.status(200).end();
+	res.status(200).json({ ok: true });
 }
 
 export default handler('POST', handlerAction);
