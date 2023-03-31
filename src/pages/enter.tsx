@@ -87,7 +87,7 @@ export default function Enter() {
 								required
 								type='number'
 							/>
-							{loading ? (
+							{tokenLoading ? (
 								<Button name='ㅎㅎ잠만여'></Button>
 							) : (
 								<Button name='암호를 대라'></Button>
