@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { clsNm } from '@/libs/client/utils';
 import Input from '@/components/input';
 import Button from '@/components/button';
-import { FieldErrors, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import useMutation from '@/libs/client/useMutation';
 import { useRouter } from 'next/router';
 

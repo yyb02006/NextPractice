@@ -6,8 +6,8 @@ import useUser from '@/libs/client/useUser';
 
 const Home: NextPage = () => {
 	/**useLayoutEffect에 useUser를 useUser에서 처리할 값이 없는 상태로 실행되어야 하기 때문에 불가능*/
-	const user = useUser();
-	console.log(user);
+	const { user, isLoading } = useUser();
+	console.log(user, isLoading);
 	return (
 		<>
 			{user ? (
