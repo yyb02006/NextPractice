@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { clsNm } from '@/libs/client/utils';
 import Input from '@/components/input';
 import Button from '@/components/button';
 import { FieldErrors, useForm } from 'react-hook-form';
 import useMutation from '@/libs/client/useMutation';
+import { useRouter } from 'next/router';
 
 interface EnterForm {
 	phone: string;
@@ -46,7 +47,19 @@ export default function Enter() {
 		if (loading) return;
 		sendToken(validData);
 	};
+
+	const router = useRouter();
+
+	/**의존성에 배열에 router가 있는이유?
+	 * '이론적'으로 useEffect의 의존성 배열에는 useEffect에서 사용하는 모든 변수들이 들어있어야함. */
+	useEffect(() => {
+		if (tokenData) {
+			router.push('/');
+		}
+	}, [tokenData, router]);
+
 	console.log(loading, data, error);
+
 	return (
 		<div className='bg-[#101010] text-[#fafafa] border-[#fafafa] overflow-hidden h-screen font-SCoreDream'>
 			<div className='font-GmarketSans flex flex-col items-center -space-y-2 mt-14 mb-14'>

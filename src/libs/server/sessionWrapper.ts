@@ -14,6 +14,6 @@ const cookieOptions = {
 	password: process.env.IRON_SESSION_PASS!,
 };
 
-export function apiSessionWrapper(fn: any) {
+export function apiSessionWrapper(fn: NextApiHandler) {
 	return ironSession(fn, cookieOptions);
 }

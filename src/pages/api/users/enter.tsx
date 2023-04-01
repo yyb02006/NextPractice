@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import client from '@/libs/server/client';
 import handlerWrapper, { ResType } from '@/libs/server/handlerWrapper';
 import nodemailer from 'nodemailer';
+import { apiSessionWrapper } from '@/libs/server/sessionWrapper';
 
 const transporter = nodemailer.createTransport({
 	service: 'naver',
@@ -67,4 +68,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 	res.status(200).json({ success: true });
 }
 
-export default handlerWrapper('POST', handler);
+export default apiSessionWrapper(
+	handlerWrapper({ method: 'POST', func: handler, inspection: false })
+);

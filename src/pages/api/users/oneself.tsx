@@ -3,14 +3,6 @@ import client from '@/libs/server/client';
 import handlerWrapper from '@/libs/server/handlerWrapper';
 import { apiSessionWrapper } from '@/libs/server/sessionWrapper';
 
-declare module 'iron-session' {
-	interface IronSessionData {
-		user?: {
-			id: number;
-		};
-	}
-}
-
 async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 	console.log(req.session.user);
 	const profile = await client.user.findUnique({
@@ -25,4 +17,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 	});
 }
 
-export default apiSessionWrapper(handlerWrapper('GET', handler));
+export default apiSessionWrapper(
+	handlerWrapper({ method: 'GET', func: handler })
+);
