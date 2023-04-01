@@ -51,7 +51,8 @@ export default function Enter() {
 	const router = useRouter();
 
 	/**의존성에 배열에 router가 있는이유?
-	 * '이론적'으로 useEffect의 의존성 배열에는 useEffect에서 사용하는 모든 변수들이 들어있어야함. */
+	 * '이론적'으로 useEffect의 의존성 배열에는 useEffect내부에서 사용하는 모든 변수들이 들어있어야함.
+	 * '이론적'이라는 뜻은, router가 변경될 경우(변경되지 않겠지만) router가 들어간 곳의 useEffect를 다시 실행시켜야한다는 것*/
 	useEffect(() => {
 		if (tokenData) {
 			router.push('/');

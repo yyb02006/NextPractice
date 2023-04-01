@@ -1,59 +1,66 @@
 import FloatingButton from '@/components/floating-button';
 import Layout from '@/components/layout';
 import type { NextPage } from 'next';
-import Link from 'next/link';
 import Goods from '@/components/goods';
+import useUser from '@/libs/client/useUser';
 
 const Home: NextPage = () => {
+	/**useLayoutEffect에 useUser를 useUser에서 처리할 값이 없는 상태로 실행되어야 하기 때문에 불가능*/
+	const user = useUser();
+	console.log(user);
 	return (
-		<Layout title='집구석' hasTabBar={true}>
-			<div className='bg-[#101010] text-[#fafafa] font-Roboto pt-12 px-4 space-y-4'>
-				{[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((_, i) => (
-					<div key={i}>
-						<Goods
-							color='Black'
-							comment={5}
-							id={1}
-							like={3}
-							price={440}
-							title='iPhone 15'
-						>
+		<>
+			{user ? (
+				<Layout title='집구석' hasTabBar={true}>
+					<div className='bg-[#101010] text-[#fafafa] font-Roboto pt-12 px-4 space-y-4'>
+						{[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((_, i) => (
+							<div key={i}>
+								<Goods
+									color='Black'
+									comment={5}
+									id={1}
+									like={3}
+									price={440}
+									title='iPhone 15'
+								>
+									<svg
+										className='w-full h-full'
+										fill='none'
+										stroke='currentColor'
+										viewBox='0 0 24 24'
+										xmlns='http://www.w3.org/2000/svg'
+									>
+										<path
+											strokeLinecap='round'
+											strokeLinejoin='round'
+											strokeWidth='2'
+											d='M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z'
+										></path>
+									</svg>
+								</Goods>
+							</div>
+						))}
+						<FloatingButton href='/details/upload'>
 							<svg
-								className='w-full h-full'
-								fill='none'
-								stroke='currentColor'
-								viewBox='0 0 24 24'
+								className='h-10 w-10'
 								xmlns='http://www.w3.org/2000/svg'
+								fill='none'
+								viewBox='0 0 24 24'
+								stroke='currentColor'
+								aria-hidden='true'
 							>
 								<path
 									strokeLinecap='round'
 									strokeLinejoin='round'
 									strokeWidth='2'
-									d='M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z'
-								></path>
+									d='M12 6v6m0 0v6m0-6h6m-6 0H6'
+								/>
 							</svg>
-						</Goods>
+						</FloatingButton>
 					</div>
-				))}
-				<FloatingButton href='/details/upload'>
-					<svg
-						className='h-10 w-10'
-						xmlns='http://www.w3.org/2000/svg'
-						fill='none'
-						viewBox='0 0 24 24'
-						stroke='currentColor'
-						aria-hidden='true'
-					>
-						<path
-							strokeLinecap='round'
-							strokeLinejoin='round'
-							strokeWidth='2'
-							d='M12 6v6m0 0v6m0-6h6m-6 0H6'
-						/>
-					</svg>
-				</FloatingButton>
-			</div>
-		</Layout>
+				</Layout>
+			) : null}
+		</>
 	);
 };
 

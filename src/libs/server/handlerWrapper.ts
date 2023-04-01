@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
+/**res로 json을 넣어줄 때 내부에 success나 기타 등등의 키값이 있으려면 타입지정 필*/
 export interface ResType {
 	success: boolean;
 	[key: string]: any;
