@@ -7,8 +7,8 @@ import useMutation from '@/libs/client/useMutation';
 import { useRouter } from 'next/router';
 
 interface EnterForm {
-	phone: string;
-	email: string;
+	phone?: string;
+	email?: string;
 }
 
 interface TokenForm {
