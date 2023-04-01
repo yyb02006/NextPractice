@@ -5,7 +5,7 @@ export interface ResType {
 	[key: string]: any;
 }
 
-export default function handler(
+export default function handlerWrapper(
 	method: 'GET' | 'POST' | 'DELETE' | 'PUT',
 	func: (req: NextApiRequest, res: NextApiResponse) => void
 ) {

@@ -82,7 +82,7 @@ export default function Enter() {
 								name='token'
 								placeholder=''
 								register={tokenRegister('token', {
-									required: '이-메일을 넣으야지!',
+									required: '암-호를 넣으야지!',
 								})}
 								required
 								type='number'

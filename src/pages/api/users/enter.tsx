@@ -1,7 +1,7 @@
 import twilio from 'twilio';
 import { NextApiRequest, NextApiResponse } from 'next';
 import client from '@/libs/server/client';
-import handler, { ResType } from '@/libs/server/handler';
+import handlerWrapper, { ResType } from '@/libs/server/handlerWrapper';
 import nodemailer from 'nodemailer';
 
 const transporter = nodemailer.createTransport({
@@ -22,14 +22,11 @@ const twilioClient = twilio(
 	process.env.TWILIO_AUTH_TOKEN
 );
 
-async function handlerAction(
-	req: NextApiRequest,
-	res: NextApiResponse<ResType>
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 	/**req.body 객체에 있는 email key의 value가 {email}로 바로 들어감 */
 	const { phone, email } = req.body;
 	const reqData = phone ? { phone: phone } : email ? { email } : {};
-	if (!reqData) return res.status(400).json({ ok: false });
+	if (!reqData) return res.status(400).json({ success: false });
 	/**payload란 데이터를 전송할 때 header나 error, status와 같은 부가적인 요소를 제외한 순수한 data자체를 말함*/
 	const payload = Math.floor(100000 + Math.random() * 900000) + '';
 	const token = await client.token.create({
@@ -70,4 +67,4 @@ async function handlerAction(
 	res.status(200).json({ success: true });
 }
 
-export default handler('POST', handlerAction);
+export default handlerWrapper('POST', handler);

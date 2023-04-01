@@ -1,12 +1,17 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import client from '@/libs/server/client';
-import handler, { ResType } from '@/libs/server/handler';
-import { withIronSessionApiRoute as ironSession } from 'iron-session/next';
+import handlerWrapper, { ResType } from '@/libs/server/handlerWrapper';
+import { apiSessionWrapper } from '@/libs/server/sessionWrapper';
 
-async function handlerAction(
-	req: NextApiRequest,
-	res: NextApiResponse<ResType>
-) {
+declare module 'iron-session' {
+	interface IronSessionData {
+		user?: {
+			id: number;
+		};
+	}
+}
+
+async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 	//iron-session의 주요 기능은 실제 기능을 하는 함수가ironSessionApiRoute내부에 있기만 하다면
 	//req를 session으로 한 번 감싸서 req.session.*으로 데이터를 보호해서 전달할 수 있다는 것.
 	const { token } = req.body;
@@ -16,14 +21,12 @@ async function handlerAction(
 		include: { user: true },
 	});
 	if (!existToken) res.status(404).end();
-	req.session.user = {
-		id: existToken?.userId,
-	};
+	if (existToken)
+		req.session.user = {
+			id: existToken.userId,
+		};
 	await req.session.save();
-	res.status(200).end();
+	res.json({ success: true });
 }
 
-export default ironSession(handler('POST', handlerAction), {
-	cookieName: 'ironCookie',
-	password: process.env.IRON_SESSION_PASS!,
-});
+export default apiSessionWrapper(handlerWrapper('POST', handler));
