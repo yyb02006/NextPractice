@@ -9,7 +9,7 @@ interface GoodsProps {
 	id: number;
 	comment: number;
 	like: number;
-	key?: number;
+	[key: string]: any;
 }
 
 export default function Goods({
@@ -20,12 +20,12 @@ export default function Goods({
 	comment,
 	like,
 	children,
-	key,
+	...rest
 }: GoodsProps) {
 	return (
-		<div className='flex flex-col' key={key}>
+		<div className='flex flex-col' {...rest}>
 			<div>
-				<h3 className='font-bold text-3xl'>
+				<h3 className='font-GmarketSans font-bold text-[1.75rem] leading-6'>
 					<span className='text-green-500'>New</span> {title}
 				</h3>
 				<Link href={`/details/${id}`}>
@@ -40,7 +40,9 @@ export default function Goods({
 			</div>
 			<div className='flex justify-end gap-5 my-3'>
 				<div className='flex items-center font-SCoreDream gap-1 text-sm font-normal hover:text-green-500 cursor-pointer'>
-					<span className='text-gray-200 font-light'>훈수 {comment}</span>
+					<span className='text-gray-300 text-sm font-normal'>
+						훈수 {comment}
+					</span>
 					<svg
 						className='w-5 h-5'
 						fill='none'
@@ -57,7 +59,9 @@ export default function Goods({
 					</svg>
 				</div>
 				<div className='flex items-center font-SCoreDream gap-1 text-sm font-normal hover:text-green-500 cursor-pointer'>
-					<span className='text-gray-200 font-light'>좋아연 {like}</span>
+					<span className='text-gray-300 text-sm font-normal'>
+						좋아연 {like}
+					</span>
 					<svg
 						className='w-5 h-5'
 						fill='none'

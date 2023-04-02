@@ -5,30 +5,60 @@ import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import Link from 'next/link';
 import { Product, User } from '@prisma/client';
+import useMutation from '@/libs/client/useMutation';
+import { clsNm } from '@/libs/client/utils';
 
-interface ProductIncludeUser extends Product {
+interface ProductWithUser extends Product {
 	user: User;
 }
 
 interface DetailProductProps {
 	success: boolean;
-	product: ProductIncludeUser;
+	isLiked: boolean;
+	product: ProductWithUser;
 	relatedProducts: Product[];
+}
+
+interface useMutationResult {
+	success: boolean;
 }
 
 const Detail: NextPage = () => {
 	const router = useRouter();
 
-	//이거 콘솔하면 서버에는 {}, 브라우저에는 {id:value}가 뜬다. 즉, router는 서버에서 js를 읽는 시점에서는 마운트되지 않고,
-	//브라우저에서 읽을 때 마운트된다는 것.
-	// console.log(router.query);
+	/**
+	 * 이거 콘솔하면 서버에는 {}, 브라우저에는 {id:value}가 뜬다. 즉, router는 서버에서 js를 읽는 시점에서는 마운트되지 않고,
+	 * 브라우저에서 읽을 때 마운트된다는 것.
+	 * console.log(router.query);
+	 */
 
-	//optional query를 이렇게 구현하는 이유는, 옵셔널체이닝으로 router?.query.id를 쓰면 useRouter가 마운트되기 전에 undefined를 뱉게되고
-	///api/products/undefined라는 주소를 불러오게 되기 때문.
-	const { data, error, isLoading } = useSWR<DetailProductProps>(
+	/**
+	 * optional query를 이렇게 구현하는 이유는, 옵셔널체이닝으로 router?.query.id를 쓰면 useRouter가 마운트되기 전에 undefined를 뱉게되고
+	 * /api/products/undefined라는 주소를 불러오게 되기 때문.
+	 * +훅에서는 data에서 뭔 값이 들어올 지 유추할 수 없기 때문에 직접 인터페이스를 만들어야함
+	 */
+	const { data, mutate } = useSWR<DetailProductProps>(
 		router.query.id ? `/api/products/${router.query.id}` : null
 	);
-	console.log(data?.relatedProducts);
+	/**
+	 * useMutation에 제네릭이 붙어있어서 쥰내 헷갈리지만, userMutation파일을 열어보면 useMutation은<UseMutationState>인터페이스를 붙여줬고,
+	 * 제네릭으로<T>까지 얹어준 걸 알 수 있다. 이 <T>가 아래에서 쓰고 있는 useMutation<useMutationResult>인 것이고, 제네릭은 data의
+	 * 타입까지 영향을 준다고 작성했기 때문에 favResponse의 타입이 success:boolean으로 정해지는 것
+	 * +useState에 붙는 타입도 제네릭으로 붙이는 거라 결국 제네릭의 제네릭임
+	 * +사실 favResponse 기본값 unknown이라 지금은 제네릭 필요없음
+	 */
+	const [toggleFav, { loading, data: favResponse, error: favError }] =
+		useMutation<useMutationResult>(`/api/products/${router.query.id}/fav`);
+
+	const onFavClick = () => {
+		toggleFav({});
+		/**
+		 * if (!data) return;는 data가 존재한다는 것을 알리기 위해 필요 prev를 사용하면 필요 x
+		 * (bound) mutate의 첫번째 인자는 가짜로 교체될 데이터, 두번째 인자는 mutate를 실행한 후에 refetch를 할지, 말지 정함
+		 * 인자가 없으면 just refresh
+		 */
+		mutate((prev) => prev && { ...prev, isLiked: !prev.isLiked }, false);
+	};
 
 	return (
 		<Layout title='상세정보' canGoBack={true} hasTabBar={true}>
@@ -59,18 +89,27 @@ const Detail: NextPage = () => {
 						<p className='mt-6 font-light leading-[32px] text-sm text-gray-200'>
 							{data?.product.desc}
 						</p>
-						<div className='mt-10 flex justify-start h-10'>
-							<div className='z-[1] w-full'>
+						{/**z-index의 함정을 잘 기억해두자 https://dev.epiloum.net/904*/}
+						<div className='relative z-[0] mt-10 flex justify-start h-10'>
+							<div className='relative z-[1] w-full'>
 								<Button name='판매자와 한 판 승부'></Button>
 							</div>
-							<button className='pl-5 pr-3 group bg-indigo-600 hover:bg-pink-400 -ml-2 rounded-sm transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 focus:ring-offset-[#101010]'>
+							<button
+								onClick={onFavClick}
+								className={clsNm(
+									data?.isLiked
+										? 'bg-pink-400 hover:bg-indigo-600 '
+										: 'bg-indigo-600 hover:bg-pink-400 ',
+									'pl-5 pr-3 group  -ml-2 rounded-sm transition-all focus:outline-none'
+								)}
+							>
 								{/* <div className='right-0 top-0 w-20 h-10 absolute bg-indigo-600 rounded-md group-hover:bg-pink-500 transition-colors '></div> */}
 								<svg
 									className='relative h-6 w-6 '
 									xmlns='http://www.w3.org/2000/svg'
-									fill='none'
+									fill={clsNm(data?.isLiked ? '#fafafa' : 'none')}
 									viewBox='0 0 24 24'
-									stroke='currentColor'
+									stroke={clsNm(data?.isLiked ? 'none' : 'currentColor')}
 									aria-hidden='true'
 								>
 									<path

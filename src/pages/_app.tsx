@@ -16,7 +16,7 @@ export default function App({ Component, pageProps }: AppProps) {
 		<SWRConfig
 			value={{ fetcher: (url: string) => fetch(url).then((res) => res.json()) }}
 		>
-			<main className={clsNm(roboto.variable) + `w-full max-w-lg mx-auto`}>
+			<main className={clsNm(roboto.variable, `w-full max-w-lg mx-auto`)}>
 				<Component {...pageProps} />
 			</main>
 		</SWRConfig>
