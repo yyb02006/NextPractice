@@ -4,6 +4,17 @@ import Button from '@/components/button';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import Link from 'next/link';
+import { Product, User } from '@prisma/client';
+
+interface ProductIncludeUser extends Product {
+	user: User;
+}
+
+interface DetailProductProps {
+	success: boolean;
+	product: ProductIncludeUser;
+	relatedProducts: Product[];
+}
 
 const Detail: NextPage = () => {
 	const router = useRouter();
@@ -14,13 +25,13 @@ const Detail: NextPage = () => {
 
 	//optional query를 이렇게 구현하는 이유는, 옵셔널체이닝으로 router?.query.id를 쓰면 useRouter가 마운트되기 전에 undefined를 뱉게되고
 	///api/products/undefined라는 주소를 불러오게 되기 때문.
-	const { data, error, isLoading } = useSWR(
+	const { data, error, isLoading } = useSWR<DetailProductProps>(
 		router.query.id ? `/api/products/${router.query.id}` : null
 	);
-	console.log(data);
+	console.log(data?.relatedProducts);
 
 	return (
-		<Layout title='상세정보' canGoBack={true}>
+		<Layout title='상세정보' canGoBack={true} hasTabBar={true}>
 			<div className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12'>
 				<div>
 					<div className='bg-indigo-600 w-full aspect-square rounded-md' />
@@ -73,19 +84,27 @@ const Detail: NextPage = () => {
 						</div>
 					</div>
 				</div>
-				<div className='mt-24'>
-					<h2 className='font-GmarketSans font-semibold text-3xl'>
-						<span className='text-green-500'>더! 더! 많은</span> 갈-락-시
+				{data?.relatedProducts.length ? (
+					<h2 className='font-GmarketSans font-semibold text-3xl mt-24'>
+						<span className='text-green-500'>더! 더!</span> 많~은{' '}
+						{data?.product.name.slice(0, data.product.name.length - 1)}
+						<span className='text-green-500'>
+							{data?.product.name.slice(-1)}
+						</span>
 					</h2>
-					<div className='mt-2 grid grid-cols-2 gap-x-2 gap-y-2'>
-						{[1, 2, 3, 4, 5, 6].map((_, i) => (
-							<div key={i}>
+				) : null}
+				<div className='mt-2 grid grid-cols-2 gap-x-2 gap-y-2'>
+					{data?.relatedProducts.map((product) => (
+						<div key={product.Id}>
+							<Link href={`/details/${product.Id}`}>
 								<div className='bg-indigo-500 hover:bg-pink-500 w-full aspect-square rounded-md transition-colors' />
-								<h3 className='font-medium mt-1'>Galaxy S60</h3>
-								<p className='font-light text-gray-400 text-sm'>￦600,000</p>
-							</div>
-						))}
-					</div>
+							</Link>
+							<h3 className='font-medium mt-1'>{product.name}</h3>
+							<p className='font-light text-gray-400 text-sm'>
+								￦{product.price}
+							</p>
+						</div>
+					))}
 				</div>
 			</div>
 		</Layout>
