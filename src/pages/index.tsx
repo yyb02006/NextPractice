@@ -6,11 +6,11 @@ import useUser from '@/libs/client/useUser';
 import useSWR from 'swr';
 import { Product } from '@prisma/client';
 
-//map의 인자로
 interface ProductProps {
 	success: boolean;
 	products: Product[];
 }
+
 const Home: NextPage = () => {
 	/**useLayoutEffect에 useUser를 useUser에서 처리할 값이 없는 상태로 실행되어야 하기 때문에 불가능*/
 	const { user, isLoading } = useUser();
