@@ -17,5 +17,5 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 }
 
 export default apiSessionWrapper(
-	handlerWrapper({ method: 'GET', func: handler })
+	handlerWrapper({ methods: ['GET'], func: handler })
 );

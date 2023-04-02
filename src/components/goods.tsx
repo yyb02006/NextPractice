@@ -9,6 +9,7 @@ interface GoodsProps {
 	id: number;
 	comment: number;
 	like: number;
+	key?: number;
 }
 
 export default function Goods({
@@ -19,9 +20,10 @@ export default function Goods({
 	comment,
 	like,
 	children,
+	key,
 }: GoodsProps) {
 	return (
-		<div className='flex flex-col'>
+		<div className='flex flex-col' key={key}>
 			<div>
 				<h3 className='font-bold text-3xl'>
 					<span className='text-green-500'>New</span> {title}
@@ -33,7 +35,7 @@ export default function Goods({
 				</Link>
 				<div className='flex justify-between items-center mt-2 font-normal'>
 					<span className='font-light text-base text-gray-200'>{color}</span>
-					<span className='text-xl'>${price}</span>
+					<span className='text-xl'>￦{price}</span>
 				</div>
 			</div>
 			<div className='flex justify-end gap-5 my-3'>

@@ -1,18 +1,28 @@
 import Layout from '@/components/layout';
 import type { NextPage } from 'next';
 import Button from '@/components/button';
+import { useRouter } from 'next/router';
+import useSWR from 'swr';
 
 const Detail: NextPage = () => {
+	const router = useRouter();
+	console.log(router.query);
+
+	//optional query를 이렇게 구현하는 이유는, 옵셔널체이닝으로 router?.query.id를 쓰면 useRouter가 마운트되기 전에 undefined를 뱉게되고
+	///api/products/undefined라는 주소를 불러오게 되기 때문.
+	const {} = useSWR(
+		router.query.id ? `/api/products/${router.query.id}` : null
+	);
 	return (
 		<Layout title='상세정보' canGoBack={true}>
-			<div className='bg-[#101010] text-[#fafafa] font-Roboto px-4 py-12'>
+			<div className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12'>
 				<div>
 					<div className='bg-indigo-600 w-full aspect-square rounded-md' />
 					<div className='flex items-center gap-2 mt-4'>
 						<div className='bg-pink-400 w-12 aspect-square rounded-md' />
 						<div>
 							<p className='font-medium text-lg'>Steve Jebs</p>
-							<p className='font-SCoreDream font-normal text-xs text-gray-400 cursor-pointer hover:text-gray-300 hover:translate-x-1 transition'>
+							<p className='font-normal text-xs text-gray-400 cursor-pointer hover:text-gray-300 hover:translate-x-1 transition'>
 								자세히 알아보기 &rarr;
 							</p>
 						</div>

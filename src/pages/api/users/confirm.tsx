@@ -26,5 +26,5 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 }
 
 export default apiSessionWrapper(
-	handlerWrapper({ method: 'POST', func: handler, inspection: false })
+	handlerWrapper({ methods: ['POST'], func: handler, inspection: false })
 );

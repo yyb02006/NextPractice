@@ -6,22 +6,24 @@ export interface ResType {
 	[key: string]: any;
 }
 
+type Method = 'GET' | 'POST' | 'DELETE' | 'PUT';
+
 /**예를 들어 매개변수로 boolean값을 넣어서 아규먼트로 true, false밖에 못 적게 할 바에는
  * 객체로 묶어서 설정값으로 인자를 받는 것이 훨씬 크-린하다
  */
 interface Config {
-	method: 'GET' | 'POST' | 'DELETE' | 'PUT';
+	methods: Method[];
 	func: (req: NextApiRequest, res: NextApiResponse) => void;
 	inspection?: boolean;
 }
 
 export default function handlerWrapper({
-	method,
+	methods,
 	func,
 	inspection = true,
 }: Config) {
 	return async function (req: NextApiRequest, res: NextApiResponse) {
-		if (req.method != method) {
+		if (req.method && !methods.includes(req.method as Method)) {
 			return res.status(405).end();
 		}
 		if (inspection && !req.session.user) {
