@@ -37,9 +37,9 @@ const Write: NextPage = () => {
 	);
 	const { register, handleSubmit } = useForm<WriteForm>();
 	const onValid = (validData: WriteForm) => {
-		if (loading) return;
+		if (loading || !category) return;
 		validData.category = category;
-		sendWrite(validData);
+		// sendWrite(validData);
 		console.log(validData);
 	};
 	useEffect(() => {
@@ -54,11 +54,11 @@ const Write: NextPage = () => {
 				className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12 space-y-4'
 			>
 				<RadioButton
+					title='카테고리'
 					buttonValues={buttonValues}
 					category={category}
 					setCategory={setCategory}
 				></RadioButton>
-				<div className='space-y-3'></div>
 				<TextArea
 					label='궁금한 내용을 적어주십사와용'
 					name='question'

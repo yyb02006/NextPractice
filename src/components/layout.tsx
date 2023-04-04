@@ -171,8 +171,20 @@ export default function Layout({
 							<div
 								className={clsNm(
 									'flex flex-col items-center text-gray-300 space-y-1 w-16',
-									/**clsNm함수 argument의 타입은 string이어야 하기 때문에 삼항연산자 조건문 router.pathname === svg.path의 표현식이 string이어야함(text-green-500)*/
-									router.pathname === svg.path ? 'text-green-500' : ''
+									/**
+									 * clsNm함수 argument의 타입은 string이어야 하기 때문에 삼항연산자 조건문 router.pathname === svg.path의 표현식이 string이어야함(text-green-500)
+									 * 같은 이유로 논리연산자는 false를 뱉어낼 수 있기 때문에 사용할 수 없음.
+									 */
+									svg.path === '/'
+										? router.pathname === '/'
+											? 'text-green-500'
+											: ''
+										: '',
+									svg.path !== '/'
+										? router.pathname.match(`^${svg.path}`)
+											? 'text-green-500'
+											: ''
+										: ''
 								)}
 							>
 								{svg.svg}

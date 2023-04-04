@@ -13,7 +13,7 @@ const CommunityPostDetail: NextPage = () => {
 		router.query.id && `/api/communities/${router.query.id}`
 	);
 	return (
-		<Layout canGoBack={true}>
+		<Layout canGoBack={true} hasTabBar={true}>
 			<div className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12'>
 				<div className='flex items-center gap-2'>
 					<div className='bg-gray-400 w-12 aspect-square rounded-lg' />
