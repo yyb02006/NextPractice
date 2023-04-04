@@ -4,11 +4,10 @@ import Button from '@/components/button';
 import TextArea from '@/components/textarea';
 import useMutation from '@/libs/client/useMutation';
 import { useForm } from 'react-hook-form';
-import Input from '@/components/input';
 import { Post } from '@prisma/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { clsNm } from '@/libs/client/utils';
+import RadioButton from '@/components/radioButton';
 
 interface WriteForm {
 	question: string;
@@ -21,15 +20,25 @@ interface WriteResponse {
 }
 
 const Write: NextPage = () => {
-	const [btnName, setBtnName] = useState('category');
-	const [category, setCategory] = useState('');
 	const router = useRouter();
+	const [category, setCategory] = useState('');
+	const [buttonValues, setButtonValues] = useState([
+		'콤-퓨타',
+		'만화책',
+		'배달음식',
+		'돗자리',
+		'전자제품',
+		'키보드',
+		'아이패드',
+		'에어팟',
+	]);
 	const [sendWrite, { loading, data }] = useMutation<WriteResponse>(
 		'/api/communities/write'
 	);
 	const { register, handleSubmit } = useForm<WriteForm>();
 	const onValid = (validData: WriteForm) => {
 		if (loading) return;
+		validData.category = category;
 		sendWrite(validData);
 		console.log(validData);
 	};
@@ -38,82 +47,18 @@ const Write: NextPage = () => {
 			router.push(`/communities/${data.post.Id}`);
 		}
 	}, [data, router]);
-	const onSelect = (e: any) => {
-		if (category === e.target.value) {
-			setCategory((p) => (p = ''));
-			return;
-		}
-		setCategory(e.target.value);
-	};
 	return (
 		<Layout canGoBack={true}>
 			<form
 				onSubmit={handleSubmit(onValid)}
 				className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12 space-y-4'
 			>
-				<div className='space-y-3'>
-					<label
-						htmlFor='computer'
-						className={clsNm(
-							category === '콤-퓨타'
-								? 'bg-indigo-600 shadow-indigo-800'
-								: 'bg-green-600 shadow-green-800 hover:bg-indigo-500 hover:shadow-indigo-600',
-							'inline-block mr-3 shadow-md active:bg-indigo-600 font-medium text-sm rounded-sm px-4 py-2'
-						)}
-					>
-						<input
-							id='computer'
-							onClick={onSelect}
-							type='radio'
-							value='콤-퓨타'
-							className='hidden'
-						/>
-						콤-퓨타
-					</label>
-					<label
-						htmlFor='cartoon'
-						className={clsNm(
-							category === '만화'
-								? 'bg-indigo-600 shadow-indigo-800'
-								: 'bg-green-600 shadow-green-800 hover:bg-indigo-500 hover:shadow-indigo-600',
-							'inline-block mr-3 shadow-md active:bg-indigo-600 font-medium text-sm rounded-sm px-4 py-2'
-						)}
-					>
-						<input
-							id='cartoon'
-							onClick={onSelect}
-							type='radio'
-							value='만화'
-							className='hidden'
-						/>
-						만화
-					</label>
-					<label
-						htmlFor='deliveryFood'
-						className={clsNm(
-							category === '배달음식'
-								? 'bg-indigo-600 shadow-indigo-800'
-								: 'bg-green-600 shadow-green-800 hover:bg-indigo-500 hover:shadow-indigo-600',
-							'inline-block mr-3 shadow-md active:bg-indigo-600 font-medium text-sm rounded-sm px-4 py-2'
-						)}
-					>
-						<input
-							id='deliveryFood'
-							onClick={onSelect}
-							type='radio'
-							value='배달음식'
-							className='hidden'
-						/>
-						배달음식
-					</label>
-				</div>
-				{/* <Input
-					kind='text'
-					name='category'
-					label='카테고리'
-					placeholder=''
-					register={register('category', { required: false })}
-				></Input> */}
+				<RadioButton
+					buttonValues={buttonValues}
+					category={category}
+					setCategory={setCategory}
+				></RadioButton>
+				<div className='space-y-3'></div>
 				<TextArea
 					label='궁금한 내용을 적어주십사와용'
 					name='question'
