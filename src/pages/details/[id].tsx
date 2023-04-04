@@ -38,7 +38,7 @@ const Detail: NextPage = () => {
 	 * +훅에서는 data에서 뭔 값이 들어올 지 유추할 수 없기 때문에 직접 인터페이스를 만들어야함
 	 */
 	const { data, mutate } = useSWR<DetailProductProps>(
-		router.query.id ? `/api/products/${router.query.id}` : null
+		router.query.id && `/api/products/${router.query.id}`
 	);
 	/**
 	 * useMutation에 제네릭이 붙어있어서 쥰내 헷갈리지만, userMutation파일을 열어보면 useMutation은<UseMutationState>인터페이스를 붙여줬고,

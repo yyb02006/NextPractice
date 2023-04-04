@@ -1,26 +1,45 @@
 import FloatingButton from '@/components/floating-button';
 import Layout from '@/components/layout';
+import { Post } from '@prisma/client';
 import type { NextPage } from 'next';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import useSWR from 'swr';
+
+interface PostWithUser extends Post {
+	user: { name: string };
+	_count: { WonderToo: number; answer: number };
+}
+
+interface PostProps {
+	success: boolean;
+	posts: PostWithUser[];
+}
 
 const Community: NextPage = () => {
+	const router = useRouter();
+	const {
+		data: postData,
+		isLoading,
+		mutate,
+	} = useSWR<PostProps>('/api/communities');
 	return (
 		<Layout title='질문 & 답변' hasTabBar={true}>
 			<div className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12 space-y-16'>
-				{[1, 1, 1, 1, 1, 1, 1].map((arr, i) => (
-					<div key={i} className='flex flex-col'>
+				{postData?.posts?.map((post) => (
+					<div key={post.Id} className='flex flex-col'>
 						<span className='text-green-500 font-GmarketSans font-bold text-xl'>
-							#콤-퓨타
+							#{post.category}
 						</span>
-						<Link href='/communities/id'>
+						<Link href={`/communities/${post.Id}`}>
 							<span className='mt-1'>
-								<span className='mt-1 text-xl text-pink-400'>Q.</span> 컴퓨터를
-								샀는데 HDMI를 어디다 끼우는 거죠ㅠㅠ?
+								<span className='mt-1 text-xl text-pink-400'>Q.</span>{' '}
+								{post.question}
 							</span>
 						</Link>
 						<div className='mt-8 flex justify-start font-normal text-xs text-gray-400 gap-2'>
-							<span>Von Neumann</span>
-							<span className='text-gray-600 font-medium'>18시간 전</span>
+							<span>{post.user.name}</span>
+							<span className='text-gray-600 font-medium'></span>
 						</div>
 						<div className='mt-4 flex justify-end items-center font-light gap-4 text-sm text-gray-200'>
 							<span className='flex items-center gap-1'>
@@ -38,7 +57,7 @@ const Community: NextPage = () => {
 										d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'
 									></path>
 								</svg>
-								<span>궁금해요 1</span>
+								<span>궁금해요 {post._count.WonderToo}</span>
 							</span>
 							<span className='flex items-center gap-1'>
 								<svg
@@ -55,7 +74,7 @@ const Community: NextPage = () => {
 										d='M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z'
 									></path>
 								</svg>
-								<span>답변 1</span>
+								<span>답변 {post._count.answer}</span>
 							</span>
 						</div>
 					</div>

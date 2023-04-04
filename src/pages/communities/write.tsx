@@ -39,7 +39,7 @@ const Write: NextPage = () => {
 	const onValid = (validData: WriteForm) => {
 		if (loading || !category) return;
 		validData.category = category;
-		// sendWrite(validData);
+		sendWrite(validData);
 		console.log(validData);
 	};
 	useEffect(() => {

@@ -8,10 +8,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 		query: { id },
 		session: { user },
 	} = req;
-	const strProductId = id!.toString();
+	if (!id) return;
 	const product = await client.product.findUnique({
 		where: {
-			Id: +strProductId.toString(),
+			Id: +id.toString(),
 		},
 		include: { user: { select: { name: true, id: true, avatar: true } } },
 	});
@@ -22,7 +22,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 		where: {
 			OR: term,
 			AND: {
-				Id: { not: +strProductId },
+				Id: { not: +id.toString() },
 			},
 		},
 	});

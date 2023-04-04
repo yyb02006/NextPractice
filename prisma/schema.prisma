@@ -89,6 +89,7 @@ model Answer {
   post      Post     @relation(fields: [postId], references: [Id], onDelete: Cascade)
   userId    Int
   postId    Int
+  answer    String
 
   @@index([userId])
   @@index([postId])
