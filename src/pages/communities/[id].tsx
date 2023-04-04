@@ -2,8 +2,16 @@ import Layout from '@/components/layout';
 import type { NextPage } from 'next';
 import Button from '@/components/button';
 import TextArea from '@/components/textarea';
+import { useRouter } from 'next/router';
+import useSWR from 'swr';
+
+interface DetailPostProps {}
 
 const CommunityPostDetail: NextPage = () => {
+	const router = useRouter();
+	const { data, mutate } = useSWR<DetailPostProps>(
+		router.query.id && `/api/communities/${router.query.id}`
+	);
 	return (
 		<Layout canGoBack={true}>
 			<div className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12'>

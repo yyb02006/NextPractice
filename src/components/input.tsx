@@ -6,7 +6,7 @@ interface InputProps {
 	label?: string;
 	placeholder?: string;
 	register: UseFormRegisterReturn;
-	required: boolean;
+	required?: boolean;
 	[key: string]: any;
 }
 

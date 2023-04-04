@@ -31,8 +31,8 @@ const Upload: NextPage = () => {
 		sendProduct(validData);
 	};
 	useEffect(() => {
-		if (data?.success) {
-			router.replace(`/details/${data.product.Id}`);
+		if (data?.product && data?.success) {
+			router.push(`/details/${data.product.Id}`);
 		}
 	}, [data, router]);
 	return (
