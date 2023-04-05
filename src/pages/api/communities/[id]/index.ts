@@ -6,12 +6,13 @@ import { apiSessionWrapper } from '@/libs/server/sessionWrapper';
 async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 	const {
 		query: { id },
+		session: { user },
 	} = req;
-	console.log(id);
+	if (!id) return;
+	const strPostId = id.toString();
 	if (req.method === 'GET') {
-		if (!id) return;
 		const post = await client.post.findUnique({
-			where: { Id: +id.toString() },
+			where: { Id: +strPostId },
 			include: {
 				user: { select: { id: true, name: true, avatar: true } },
 				answer: {
@@ -21,20 +22,33 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 						user: { select: { id: true, name: true, avatar: true } },
 					},
 				},
-				_count: { select: { answer: true, WonderToo: true } },
+				_count: { select: { answer: true, wonderToo: true } },
 			},
 		});
-		res.json({ success: true, post });
+		const isWonderToo = Boolean(
+			await client.wonderToo.findFirst({
+				where: { userId: user?.id, postId: +strPostId },
+			})
+		);
+		if (post) {
+			res.json({ success: true, post, isWonderToo });
+			return;
+		}
+		if (!post) {
+			res.status(404).end();
+		}
 	}
 	if (req.method === 'POST') {
-		// const respone = await client.answer.create({
-		// 	data: {
-		// 		answer: answer,
-		// 		user: { connect: { id: user?.id } },
-		// 		post: { connect: { Id: +id } },
-		// 	},
-		// });
-		console.log(id);
+		const {
+			body: { answer },
+		} = req;
+		const resAnswer = await client.answer.create({
+			data: {
+				answer: answer,
+				user: { connect: { id: user?.id } },
+				post: { connect: { Id: +strPostId } },
+			},
+		});
 
 		res.json({ success: true });
 	}

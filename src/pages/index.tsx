@@ -16,7 +16,7 @@ interface ProductProps {
 }
 
 const Home: NextPage = () => {
-	/**useLayoutEffect에 useUser를 퍼리하는 것은 useUser에서 처리할 값이 없는 상태로 실행되어야 하기 때문에 불가능*/
+	/**useLayoutEffect에 useUser를 처리하는 것은 useUser에서 처리할 값이 없는 상태로 실행되어야 하기 때문에 불가능*/
 	const { user, isLoading } = useUser();
 	const {
 		data: productData,

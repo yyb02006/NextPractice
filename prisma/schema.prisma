@@ -76,7 +76,7 @@ model Post {
   question  String      @db.MediumText
   category  String
   answer    Answer[]
-  WonderToo WonderToo[]
+  wonderToo WonderToo[]
 
   @@index([userId])
 }

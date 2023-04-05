@@ -7,7 +7,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 	const posts = await client.post.findMany({
 		include: {
 			user: { select: { name: true } },
-			_count: { select: { WonderToo: true, answer: true } },
+			_count: { select: { wonderToo: true, answer: true } },
 		},
 	});
 	res.json({ success: true, posts });

@@ -8,7 +8,7 @@ import useSWR from 'swr';
 
 interface PostWithUser extends Post {
 	user: { name: string };
-	_count: { WonderToo: number; answer: number };
+	_count: { wonderToo: number; answer: number };
 }
 
 interface PostProps {
@@ -57,7 +57,7 @@ const Community: NextPage = () => {
 										d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'
 									></path>
 								</svg>
-								<span>궁금해요 {post._count.WonderToo}</span>
+								<span>궁금해요 {post._count.wonderToo}</span>
 							</span>
 							<span className='flex items-center gap-1'>
 								<svg

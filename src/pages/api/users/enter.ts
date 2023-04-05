@@ -4,6 +4,8 @@ import client from '@/libs/server/client';
 import handlerWrapper, { ResType } from '@/libs/server/handlerWrapper';
 import nodemailer from 'nodemailer';
 import { apiSessionWrapper } from '@/libs/server/sessionWrapper';
+import useUser from '@/libs/client/useUser';
+import { useEffect } from 'react';
 
 const transporter = nodemailer.createTransport({
 	service: 'naver',

@@ -5,6 +5,7 @@ import Button from '@/components/button';
 import { useForm } from 'react-hook-form';
 import useMutation from '@/libs/client/useMutation';
 import { useRouter } from 'next/router';
+import useUser from '@/libs/client/useUser';
 
 interface EnterForm {
 	phone?: string;
@@ -20,6 +21,7 @@ interface useMutationResult {
 }
 
 export default function Enter() {
+	const { user, isLoading } = useUser();
 	const [send, { loading, data, error }] =
 		useMutation<useMutationResult>('/api/users/enter');
 	const [

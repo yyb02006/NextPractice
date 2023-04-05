@@ -9,19 +9,19 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 		session: { user },
 	} = req;
 	if (!id) return;
-	const strProductId = id.toString();
-	const existsFav = await client.favorite.findFirst({
-		where: { productId: +strProductId, userId: user?.id },
+	const strPostId = id.toString();
+	const existWonder = await client.wonderToo.findFirst({
+		where: { postId: +strPostId, userId: user?.id },
 	});
-	if (existsFav) {
-		await client.favorite.delete({
-			where: { Id: existsFav.Id },
+	if (existWonder) {
+		await client.wonderToo.delete({
+			where: { Id: existWonder.Id },
 		});
 	}
-	if (!existsFav) {
-		await client.favorite.create({
+	if (!existWonder) {
+		await client.wonderToo.create({
 			data: {
-				product: { connect: { Id: +strProductId } },
+				post: { connect: { Id: +strPostId } },
 				user: { connect: { id: user?.id } },
 			},
 		});
