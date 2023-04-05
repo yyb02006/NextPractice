@@ -7,7 +7,7 @@ import useSWR from 'swr';
 import useMutation from '@/libs/client/useMutation';
 import { useForm } from 'react-hook-form';
 import { Answer, Post, User } from '@prisma/client';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { clsNm } from '@/libs/client/utils';
 
 interface AnswerForm {
@@ -30,6 +30,11 @@ interface DetailPostProps {
 	isWonderToo: boolean;
 }
 
+interface useMutationResult {
+	answerResponse: Answer;
+	success: boolean;
+}
+
 const CommunityPostDetail: NextPage = () => {
 	const router = useRouter();
 	const { register, reset, handleSubmit } = useForm<AnswerForm>();
@@ -38,9 +43,10 @@ const CommunityPostDetail: NextPage = () => {
 	const { data: detailPostData, mutate } = useSWR<DetailPostProps>(
 		router.query.id && `/api/communities/${router.query.id}`
 	);
-	const [sendAnswer, { loading, data: answerRes }] = useMutation(
-		router.query.id ? `/api/communities/${router.query.id}` : ''
-	);
+	const [sendAnswer, { loading, data: answerResult }] =
+		useMutation<useMutationResult>(
+			router.query.id ? `/api/communities/${router.query.id}` : ''
+		);
 	const [
 		sendWonderToo,
 		{ loading: wonderTooLoading, data: wonderTooRes, error },
@@ -51,11 +57,23 @@ const CommunityPostDetail: NextPage = () => {
 	const onValid = (validData: AnswerForm) => {
 		if (loading) return;
 		sendAnswer(validData);
-		reset({ answer: '' });
-		element.current?.scrollIntoView({
-			behavior: 'smooth',
-		});
+		/**
+		 * 스크롤 상단으로 끌어올리기
+		 * element.current?.scrollIntoView({
+		 *  behavior: 'smooth',
+		 * });
+		 */
 	};
+
+	useEffect(() => {
+		if (answerResult?.success) {
+			/**
+			 * rerender를 일으키는 간편한 방법
+			 */
+			mutate();
+			reset({ answer: '' });
+		}
+	}, [answerResult]);
 
 	const onWonderClick = () => {
 		/**

@@ -42,7 +42,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 		const {
 			body: { answer },
 		} = req;
-		const resAnswer = await client.answer.create({
+		const answerResponse = await client.answer.create({
 			data: {
 				answer: answer,
 				user: { connect: { id: user?.id } },
@@ -50,7 +50,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 			},
 		});
 
-		res.json({ success: true });
+		res.json({ success: true, answerResponse });
 	}
 }
 
