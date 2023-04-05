@@ -26,6 +26,7 @@ export default function RadioButton({
 			<div className='font-medium text-xs text-gray-300'>{title}</div>
 			{buttonValues.map((_, index) => (
 				<label
+					key={index}
 					htmlFor={buttonValues[index]}
 					className={clsNm(
 						category === buttonValues[index]

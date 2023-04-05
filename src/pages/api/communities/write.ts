@@ -5,12 +5,18 @@ import { apiSessionWrapper } from '@/libs/server/sessionWrapper';
 
 async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 	const {
-		body: { question, category },
+		body: { question, category, latitude, longitude },
 		session: { user },
 	} = req;
 
 	const post = await client.post.create({
-		data: { question, category, user: { connect: { id: user?.id } } },
+		data: {
+			question,
+			category,
+			latitude,
+			longitude,
+			user: { connect: { id: user?.id } },
+		},
 	});
 	res.json({ success: true, post });
 }

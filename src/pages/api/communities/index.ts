@@ -6,8 +6,16 @@ import { apiSessionWrapper } from '@/libs/server/sessionWrapper';
 async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 	const {
 		session: { user },
+		query: { latitude, longitude },
 	} = req;
+	if (!latitude || !longitude) return;
+	const parsedLatitude = parseFloat(latitude?.toString());
+	const parsedLongitude = parseFloat(longitude?.toString());
 	const posts = await client.post.findMany({
+		where: {
+			latitude: { gte: parsedLatitude - 0.01, lte: parsedLatitude + 0.01 },
+			longitude: { gte: parsedLongitude - 0.01, lte: parsedLongitude + 0.01 },
+		},
 		include: {
 			user: { select: { name: true } },
 			_count: { select: { wonderToo: true, answer: true } },
@@ -18,7 +26,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 	});
 	const newPosts = posts.map((post) => ({
 		...post,
-		isWonderToo: Boolean(userWonderToo.find((d) => d.postId === post.Id)),
+		isWonderToo: Boolean(userWonderToo.find((post) => post.postId === post.Id)),
 	}));
 
 	/**

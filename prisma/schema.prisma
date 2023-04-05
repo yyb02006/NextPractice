@@ -75,6 +75,8 @@ model Post {
   userId    Int
   question  String      @db.MediumText
   category  String
+  latitude  Float?
+  longitude Float?
   answer    Answer[]
   wonderToo WonderToo[]
 

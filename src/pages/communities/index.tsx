@@ -1,5 +1,6 @@
 import FloatingButton from '@/components/floating-button';
 import Layout from '@/components/layout';
+import useCoords from '@/libs/client/useCoord';
 import { clsNm } from '@/libs/client/utils';
 import { Post } from '@prisma/client';
 import type { NextPage } from 'next';
@@ -18,11 +19,16 @@ interface PostProps {
 }
 
 const Community: NextPage = () => {
+	const { latitude, longitude } = useCoords();
 	const {
 		data: postData,
 		isLoading,
 		mutate,
-	} = useSWR<PostProps>('/api/communities');
+	} = useSWR<PostProps>(
+		latitude && longitude
+			? `/api/communities?latitude=${latitude}&longitude=${longitude}`
+			: null
+	);
 	const onWonderClick = (vaildData: number) => {};
 	return (
 		<Layout title='질문 & 답변' hasTabBar={true}>

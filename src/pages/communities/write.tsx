@@ -8,6 +8,7 @@ import { Post } from '@prisma/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import RadioButton from '@/components/radioButton';
+import useCoords from '@/libs/client/useCoord';
 
 interface WriteForm {
 	question: string;
@@ -21,6 +22,7 @@ interface WriteResponse {
 
 const Write: NextPage = () => {
 	const router = useRouter();
+	const { latitude, longitude } = useCoords();
 	const [category, setCategory] = useState('');
 	const [buttonValues, setButtonValues] = useState([
 		'콤-퓨타',
@@ -38,9 +40,7 @@ const Write: NextPage = () => {
 	const { register, handleSubmit } = useForm<WriteForm>();
 	const onValid = (validData: WriteForm) => {
 		if (loading || !category) return;
-		validData.category = category;
-		sendWrite(validData);
-		console.log(validData);
+		sendWrite({ ...validData, category, latitude, longitude });
 	};
 	useEffect(() => {
 		if (data?.post && data?.success) {
