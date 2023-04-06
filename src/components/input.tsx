@@ -24,7 +24,7 @@ export default function Input({
 	...rest
 }: InputProps) {
 	return (
-		<div className='flex flex-col item space-y-2 select-none'>
+		<div className='flex flex-col item space-y-2 select-none text-gray-200'>
 			{label ? (
 				<label htmlFor={name} className='font-medium text-xs text-gray-300'>
 					{label}
@@ -35,7 +35,7 @@ export default function Input({
 					type='text'
 					id={name}
 					placeholder={placeholder}
-					className='appearance-none text-gray-600 w-full bg-gray-200 rounded-sm placeholder-gray-400 outline-none focus:border-green-600 focus:ring-[2px] focus:ring-green-600'
+					className='appearance-none w-full bg-[#2a2a2a] border-none rounded-sm placeholder-gray-500 outline-none focus:border-green-600 focus:ring-[2px] focus:ring-green-600'
 					required={required}
 					{...register}
 					{...rest}
@@ -45,7 +45,7 @@ export default function Input({
 				<input
 					type='email'
 					id={name}
-					className='appearance-none w-full bg-gray-200 rounded-sm placeholder-gray-400 font-medium outline-none focus:border-green-600 focus:ring-[2px] focus:ring-green-600'
+					className='appearance-none w-full bg-[#2a2a2a] border-none rounded-sm placeholder-gray-500 font-medium outline-none focus:border-green-600 focus:ring-[2px] focus:ring-green-600'
 					placeholder={placeholder}
 					required={required}
 					{...register}
@@ -54,30 +54,30 @@ export default function Input({
 			) : null}
 			{kind === 'price' ? (
 				<div className='relative flex items-center'>
-					<div className='absolute pl-3 h-full flex items-center left-0 top-0 text-gray-500'>
+					<div className='absolute pl-3 h-full flex items-center left-0 top-0'>
 						<span className='font-Roboto text-l font-medium'>￦</span>
 					</div>
 					<input
 						type='number'
 						id={name}
 						placeholder={placeholder}
-						className='appearance-none text-gray-600 pl-8 pr-12 w-full bg-gray-200 rounded-sm placeholder-gray-400 outline-none focus:border-green-600 focus:ring-[2px] focus:ring-green-600'
+						className='appearance-none pl-8 pr-12 w-full bg-[#2a2a2a] border-none rounded-sm placeholder-gray-500 outline-none focus:border-green-600 focus:ring-[2px] focus:ring-green-600'
 						required={required}
 						{...register}
 						{...rest}
 					/>
-					<span className='absolute font-Roboto pr-3 h-full flex items-center font-bold right-0 top-0 text-gray-500'>
+					<span className='absolute font-Roboto pr-3 h-full flex items-center font-bold right-0 top-0'>
 						KRW
 					</span>
 				</div>
 			) : null}
 			{kind === 'phone' ? (
 				<div className='flex'>
-					<span className='flex justify-center items-center border border-r-0 border-gray-500 text-gray-400 text-sm px-3 rounded-l-sm select-none font-medium'>
+					<span className='flex justify-center items-center border border-r-0 border-[#404040] text-sm px-3 rounded-l-sm select-none font-medium'>
 						+82
 					</span>
 					<input
-						className='appearance-none w-full bg-gray-200 border-gray-300 text-[#101010] placeholder-gray-400 font-medium focus:border-green-600 focus:ring-[2px] focus:ring-green-600 rounded-r-sm'
+						className='appearance-none w-full bg-[#2a2a2a] border-none placeholder-gray-500 font-medium focus:border-green-600 focus:ring-[2px] focus:ring-green-600 rounded-r-sm'
 						type='number'
 						id={name}
 						placeholder={placeholder}
@@ -91,7 +91,7 @@ export default function Input({
 				<input
 					id={name}
 					placeholder={placeholder}
-					className='appearance-none text-gray-600 w-full bg-gray-200 rounded-sm placeholder-gray-400 outline-none focus:border-green-600 focus:ring-[2px] focus:ring-green-600'
+					className='appearance-none w-full bg-[#2a2a2a] border-none rounded-sm placeholder-gray-400 outline-none focus:border-green-600 focus:ring-[2px] focus:ring-green-600'
 					required={required}
 					{...register}
 					{...rest}

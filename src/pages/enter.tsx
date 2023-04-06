@@ -21,7 +21,6 @@ interface useMutationResult {
 }
 
 export default function Enter() {
-	const { user, isLoading } = useUser();
 	const [send, { loading, data, error }] =
 		useMutation<useMutationResult>('/api/users/enter');
 	const [
@@ -60,8 +59,6 @@ export default function Enter() {
 			router.push('/');
 		}
 	}, [tokenData, router]);
-
-	console.log(loading, data, error);
 
 	return (
 		<div className='bg-[#101010] text-[#fafafa] border-[#fafafa] overflow-hidden h-screen font-SCoreDream'>

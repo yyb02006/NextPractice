@@ -16,14 +16,11 @@ interface ProductProps {
 }
 
 const Home: NextPage = () => {
-	/**useLayoutEffect에 useUser를 처리하는 것은 useUser에서 처리할 값이 없는 상태로 실행되어야 하기 때문에 불가능*/
-	const { user, isLoading } = useUser();
 	const {
 		data: productData,
 		error,
 		isLoading: productLoading,
 	} = useSWR<ProductProps>('/api/products');
-	console.log(productData);
 	return (
 		<Layout title='집구석' hasTabBar={true}>
 			<div className='bg-[#101010] text-[#fafafa] font-Roboto pt-12 px-4 space-y-4'>

@@ -1,10 +1,16 @@
+import { User } from '@prisma/client';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import useSWR from 'swr';
 
-/**특히 enter페이지의 useUser는 SSR을 이용해서 사용자에게 로그인 폼을 보여주지 않고 리다이렉션하는 것이 중요*/
+//특히 enter페이지의 useUser는 SSR을 이용해서 사용자에게 로그인 폼을 보여주지 않고 리다이렉션하는 것이 중요
 
-export default function useUser() {
+interface UseUser {
+	user: User;
+	isLoading?: boolean;
+}
+
+export default function useUser(): UseUser {
 	const { data, error, isLoading } = useSWR('/api/users/own');
 	const router = useRouter();
 
