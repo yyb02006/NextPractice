@@ -7,7 +7,6 @@ import useSWR from 'swr';
 export default function useUser() {
 	const { data, error, isLoading } = useSWR('/api/users/own');
 	const router = useRouter();
-	console.log(1111);
 
 	useEffect(() => {
 		/***** data와 !data.success를 묶어서 조건문으로 사용하는이유?

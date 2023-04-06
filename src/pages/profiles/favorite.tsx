@@ -1,20 +1,34 @@
 import type { NextPage } from 'next';
 import Layout from '@/components/layout';
 import Goods from '@/components/goods';
+import useSWR from 'swr';
+import { Favorite } from '@prisma/client';
+import { ProductWithCount } from '..';
 
-const Favorite: NextPage = () => {
+interface FavoriteWithProduct extends Favorite {
+	product: ProductWithCount;
+}
+
+interface FavoriteProps {
+	success: boolean;
+	favorites: FavoriteWithProduct[];
+}
+
+const Trade: NextPage = () => {
+	const { data: favoriteData, isLoading } = useSWR<FavoriteProps>(
+		'/api/profiles/own/favorites'
+	);
 	return (
 		<Layout canGoBack={true} hasTabBar={true}>
 			<div className='bg-[#101010] text-[#fafafa] font-Roboto pt-12 px-4 space-y-4'>
-				{[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((_, i) => (
-					<div key={i}>
+				{favoriteData?.favorites.map((favorite) => (
+					<div key={favorite.Id}>
 						<Goods
 							color='Black'
-							comment={5}
-							id={1}
-							like={3}
-							price={440}
-							title='iPhone 15'
+							id={favorite.product.Id}
+							like={favorite.product._count.Favorite}
+							price={favorite.product.price}
+							title={favorite.product.name}
 						>
 							<svg
 								className='w-full h-full'
@@ -38,4 +52,4 @@ const Favorite: NextPage = () => {
 	);
 };
 
-export default Favorite;
+export default Trade;

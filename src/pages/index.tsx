@@ -6,13 +6,13 @@ import useUser from '@/libs/client/useUser';
 import useSWR from 'swr';
 import { Product } from '@prisma/client';
 
-interface ProductWithFavorite extends Product {
+export interface ProductWithCount extends Product {
 	_count: { Favorite: number };
 }
 
 interface ProductProps {
 	success: boolean;
-	products: ProductWithFavorite[];
+	products: ProductWithCount[];
 }
 
 const Home: NextPage = () => {

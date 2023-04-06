@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["filteredRelationCount"]
 }
 
 datasource db {
@@ -12,19 +13,22 @@ datasource db {
 }
 
 model User {
-  id        Int         @id @default(autoincrement())
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  name      String
-  phone     String?     @unique
-  email     String?     @unique
-  avatar    String?
-  tokens    Token[]
-  Product   Product[]
-  Favorite  Favorite[]
-  Post      Post[]
-  answer    Answer[]
-  WonderToo WonderToo[]
+  id              Int         @id @default(autoincrement())
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  name            String
+  phone           String?     @unique
+  email           String?     @unique
+  avatar          String?
+  tokens          Token[]
+  Product         Product[]
+  Favorite        Favorite[]
+  Post            Post[]
+  answer          Answer[]
+  WonderToo       WonderToo[]
+  writtenReviews  Review[]    @relation(name: "writtenReviews")
+  receivedReviews Review[]    @relation(name: "receivedReviews")
+  Trade           Trade[]
 }
 
 model Token {
@@ -39,17 +43,17 @@ model Token {
 }
 
 model Product {
-  Id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
   image     String
   name      String
   price     Int
-  desc      String   @db.MediumText
-
-  Favorite Favorite[]
+  desc      String     @db.MediumText
+  Favorite  Favorite[]
+  Trade     Trade[]
 
   @@index([userId])
 }
@@ -108,4 +112,38 @@ model WonderToo {
 
   @@index([userId])
   @@index([postId])
+}
+
+model Review {
+  Id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  review       String   @db.MediumText
+  rating       Int      @default(1)
+  createdBy    User     @relation(name: "writtenReviews", fields: [createdById], references: [id], onDelete: Cascade)
+  createdFor   User     @relation(name: "receivedReviews", fields: [createdForId], references: [id], onDelete: Cascade)
+  createdById  Int
+  createdForId Int
+
+  @@index([createdById])
+  @@index([createdForId])
+}
+
+model Trade {
+  Id        Int         @id @default(autoincrement())
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product     @relation(fields: [productId], references: [Id], onDelete: Cascade)
+  userId    Int
+  productId Int
+  kind      KindofTrade
+
+  @@index([userId])
+  @@index([productId])
+}
+
+enum KindofTrade {
+  PURCHASE
+  SALE
 }
