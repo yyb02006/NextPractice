@@ -1,7 +1,20 @@
 import type { NextPage } from 'next';
 import Layout from '@/components/layout';
+import useSWR from 'swr';
+import { useRouter } from 'next/router';
+import { Stream } from '@prisma/client';
+
+interface StreamProps {
+	success: boolean;
+	stream: Stream;
+}
 
 const LiveStreamDetail: NextPage = () => {
+	const router = useRouter();
+	const { data, isLoading } = useSWR(
+		//논리연산 안하면 쿼리아이디 없당...
+		router.query.id && `/api/streams/${router.query.id}`
+	);
 	return (
 		<Layout canGoBack={true} hasTabBar={true}>
 			<div className='bg-[#101010] text-[#fafafa] font-SCoreDream py-12'>
@@ -17,28 +30,28 @@ const LiveStreamDetail: NextPage = () => {
 						</div>
 					</div>
 				</div>
-				<div className='mt-16 h-[40vh] overflow-y-scroll scroll-'>
+				<div className='mt-16 h-[40vh] overflow-y-scroll scroll-m-0'>
 					<div className='flex items-start gap-2 mt-4 bg-[#1a1a1a] p-4'>
-						<div className='bg-pink-400 w-8 aspect-square rounded-md' />
+						<div className='bg-pink-400 w-10 aspect-square rounded-md' />
 						<div>
 							<div className='font-normal text-xs text-gray-400'>
 								Steve Jebs
 							</div>
-							<div className='font-SCoreDream font-light text-sm leading-6 text-gray-300 max-w-[80%] break-keep'>
+							<div className='font-SCoreDream font-light text-sm leading-6 text-gray-200 w-[80%] break-keep'>
 								아이폰의 아름다움을 모르는 당신이 불쌍해요!
 							</div>
 						</div>
 					</div>
 					<div className='flex justify-end items-start gap-2 mt-4 bg-[#1a1a1a] p-4'>
 						<div className='flex flex-col items-end'>
-							<div className='font-normal text-xs text-gray-400'>
+							<div className='font-normal text-xs text-gray-400 w-[80%]'>
 								Von Neumann
 							</div>
-							<div className='font-SCoreDream font-light text-sm leading-6 text-right text-gray-300 max-w-[80%] break-keep'>
+							<div className='font-SCoreDream font-light text-sm leading-6 text-left text-gray-200 w-[80%] break-keep'>
 								갤럭시의 놀라움을 모르는 당신이 백 배는 더!
 							</div>
 						</div>
-						<div className='bg-indigo-500 w-12 aspect-square rounded-md' />
+						<div className='bg-indigo-500 w-10 aspect-square rounded-md' />
 					</div>
 					<div className='flex items-start gap-2 mt-4 bg-[#1a1a1a] p-4'>
 						<div className='bg-pink-400 w-8 aspect-square rounded-md' />

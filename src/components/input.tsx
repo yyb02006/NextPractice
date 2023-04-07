@@ -64,7 +64,7 @@ export default function Input({
 				<div>
 					<div className='relative flex items-center'>
 						<div className='absolute pl-3 h-full flex items-center left-0 top-0'>
-							<span className='font-Roboto text-l font-medium'>￦</span>
+							<span className='font-SCoreDream text-base font-medium'>￦</span>
 						</div>
 						<input
 							type='number'

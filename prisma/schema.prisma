@@ -13,12 +13,12 @@ datasource db {
 }
 
 model User {
-  id              Int         @id @default(autoincrement())
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  id              Int          @id @default(autoincrement())
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
   name            String
-  phone           String?     @unique
-  email           String?     @unique
+  phone           String?      @unique
+  email           String?      @unique
   avatar          String?
   tokens          Token[]
   Product         Product[]
@@ -26,9 +26,11 @@ model User {
   Post            Post[]
   answer          Answer[]
   WonderToo       WonderToo[]
-  writtenReviews  Review[]    @relation(name: "writtenReviews")
-  receivedReviews Review[]    @relation(name: "receivedReviews")
+  writtenReviews  Review[]     @relation(name: "writtenReviews")
+  receivedReviews Review[]     @relation(name: "receivedReviews")
   Trade           Trade[]
+  Stream          Stream[]
+  StreamChat      StreamChat[]
 }
 
 model Token {
@@ -146,4 +148,32 @@ model Trade {
 enum KindofTrade {
   PURCHASE
   SALE
+}
+
+model Stream {
+  Id          Int          @id @default(autoincrement())
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  name        String
+  description String       @db.MediumText
+  price       Int
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  StreamChat  StreamChat[]
+
+  @@index([userId])
+}
+
+model StreamChat {
+  Id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  stream    Stream   @relation(fields: [streamId], references: [Id], onDelete: Cascade)
+  streamId  Int
+  message   String   @db.MediumText
+
+  @@index([userId])
+  @@index([streamId])
 }

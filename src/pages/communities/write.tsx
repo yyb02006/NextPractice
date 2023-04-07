@@ -15,7 +15,7 @@ interface WriteForm {
 	category: string;
 }
 
-interface WriteResponse {
+interface WriteResult {
 	success: boolean;
 	post: Post;
 }
@@ -34,7 +34,7 @@ const Write: NextPage = () => {
 		'아이패드',
 		'에어팟',
 	]);
-	const [sendWrite, { loading, data }] = useMutation<WriteResponse>(
+	const [sendWrite, { loading, data }] = useMutation<WriteResult>(
 		'/api/communities/write'
 	);
 	const { register, handleSubmit } = useForm<WriteForm>();

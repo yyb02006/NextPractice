@@ -27,7 +27,7 @@ export default function TextArea({
 			<textarea
 				rows={rows}
 				id={name}
-				className='appearance-none block text-gray-600 w-full bg-gray-200 rounded-sm placeholder-gray-400 outline-none focus:border-green-600 focus:ring-[2px] focus:ring-green-600'
+				className='appearance-none resize-none block text-gray-200 border-none w-full bg-[#2a2a2a] rounded-sm placeholder-gray-500 focus:border-green-600 focus:ring-[1px] focus:ring-green-600'
 				placeholder={placeholder}
 				required={required}
 				{...register}

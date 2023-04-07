@@ -30,7 +30,7 @@ export default function handlerWrapper({
 			return res.status(401).json({ success: false });
 		}
 		try {
-			/**func에 비동기적 요소가 있을 경우 catch로 넘어가면 안되기 때문에 await 사용 */
+			/**why use await? */
 			await func(req, res);
 		} catch (err) {
 			console.log(err);

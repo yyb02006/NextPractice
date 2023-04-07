@@ -41,7 +41,7 @@ const svgsObj = (): navButtonProps[] => {
 			),
 		},
 		{
-			path: '/live-streams',
+			path: '/streams',
 			color: 'text-green-500',
 			title: '라이브',
 			svg: (

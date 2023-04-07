@@ -9,7 +9,7 @@ const Live: NextPage = () => {
 			<div className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12 space-y-6'>
 				{[1, 2, 3, 4, 5, 6].map((arr, i) => (
 					<div key={i}>
-						<Link href={`/live-streams/${i}`}>
+						<Link href={`/streams/${i}`}>
 							<div className='w-full bg-indigo-500 aspect-video rounded-sm'></div>
 							<div className='inline-block mt-2 font-medium text-gray-200 text-sm'>
 								<span className='text-green-500'>우리</span> 스마트폰이
@@ -18,7 +18,7 @@ const Live: NextPage = () => {
 						</Link>
 					</div>
 				))}
-				<FloatingButton href='/live-streams/create'>
+				<FloatingButton href='/streams/create'>
 					<svg
 						xmlns='http://www.w3.org/2000/svg'
 						fill='none'
