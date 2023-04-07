@@ -3,29 +3,41 @@ import Input from '@/components/input';
 import Layout from '@/components/layout';
 import useMutation from '@/libs/client/useMutation';
 import useUser from '@/libs/client/useUser';
-import { error } from 'console';
 import type { NextPage } from 'next';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { ValidationDataProps } from '../api/profiles/own';
 
-interface EditForm {
+interface EditFormErrors {
+	emptyForm?: string;
+	phoneOverlap?: string;
+	emailOverlap?: string;
+}
+
+interface EditForm extends EditFormErrors {
 	name: string;
 	email?: string;
 	phone?: string;
 	avatar?: string;
-	setError?: string;
 }
 
 interface EditedResponse {
 	success: boolean;
-	error?: string;
+	results: { errors?: ValidationDataProps; values: ValidationDataProps };
+}
+
+interface PrevForm {
+	name: string;
+	email?: string | null;
+	phone?: string | null;
+	avatar?: string | null;
 }
 
 const EditProfile: NextPage = () => {
 	const { user } = useUser();
 
-	const [prevForm, setPrevForm] = useState({
-		avatar: user?.avatar ? user.avatar : {},
+	const [prevForm, setPrevForm] = useState<PrevForm>({
+		avatar: user?.avatar ? user.avatar : '',
 		name: user?.name ? user.name : '',
 		phone: user?.phone ? user.phone : '',
 		email: user?.email ? user.email : '',
@@ -45,36 +57,76 @@ const EditProfile: NextPage = () => {
 		useMutation<EditedResponse>('/api/profiles/own');
 
 	useEffect(() => {
-		if (user?.email) setValue('email', user.email);
-		if (user?.name) setValue('name', user.name);
-		if (user?.phone) setValue('phone', user.phone);
-		if (user?.avatar) setValue('avatar', user.avatar);
+		if (user?.email) {
+			setValue('email', user.email);
+			setPrevForm((p) => ({ ...p, email: user.email }));
+		}
+		if (user?.name) {
+			setValue('name', user.name);
+			setPrevForm((p) => ({ ...p, name: user.name }));
+		}
+		if (user?.phone) {
+			setValue('phone', user.phone);
+			setPrevForm((p) => ({ ...p, phone: user.phone }));
+		}
+		if (user?.avatar) {
+			/**fileObject는 db에서 불러온 값과 어떻게 비교할 것인지? */
+			setValue('avatar', user.avatar);
+		}
 	}, [user, setValue]);
 
 	useEffect(() => {
-		if (data && !data.success) {
-			setError('setError', { message: data.error });
+		if (data?.results?.errors?.email) {
+			setError('emailOverlap', { message: data.results.errors.email });
 		}
-	}, [data]);
+		if (data?.results?.errors?.phone) {
+			setError('phoneOverlap', { message: data.results.errors.phone });
+		}
+	}, [data, setError]);
 
 	const onValid = (validData: EditForm) => {
 		if (loading) return;
 		if (!validData.email && !validData.phone) {
 			setFocus('email');
-			return setError('setError', {
-				message: '이메일 폰남바 둘 중에 하나만 채워 Yes or Yes!',
+			return setError('emptyForm', {
+				message: '님폰없? 님메없?!',
 			});
 		}
-		if (JSON.stringify(validData) === JSON.stringify(prevForm)) return;
-		sendEdited({ valid: { ...validData }, prev: { ...prevForm } });
+		if (
+			JSON.stringify({
+				1: validData.email,
+				2: validData.name,
+				3: validData.phone,
+			}) ===
+			JSON.stringify({ 1: prevForm.email, 2: prevForm.name, 3: prevForm.phone })
+		) {
+			return console.log('overlap');
+		}
+		sendEdited(validData);
 	};
 
-	const onPhoneChange = () => {
-		clearErrors('setError');
+	const onEmptyErrorChange = () => {
+		const emptyErrors: 'emptyForm'[] = ['emptyForm'];
+		emptyErrors.forEach((arr) => clearErrors(arr));
 	};
 
-	const onEmailChange = () => {
-		clearErrors('setError');
+	const onEmailOverlapChange = (e: ChangeEvent<HTMLInputElement>) => {
+		if (
+			data?.results?.errors &&
+			e.target.value === data?.results.values.email
+		) {
+			return setError('emailOverlap', { message: data.results.errors.email });
+		}
+		clearErrors('emailOverlap');
+	};
+	const onPhoneOverlapChange = (e: ChangeEvent<HTMLInputElement>) => {
+		if (
+			data?.results?.errors &&
+			e.target.value === data?.results.values.phone
+		) {
+			return setError('phoneOverlap', { message: data.results.errors.phone });
+		}
+		clearErrors('phoneOverlap');
 	};
 
 	console.log(data);
@@ -91,7 +143,7 @@ const EditProfile: NextPage = () => {
 						className='relative group cursor-pointer flex flex-col items-end'
 					>
 						<div className='bg-pink-400 w-32 aspect-square rounded-lg' />
-						<div className='absolute bg-green-600 rounded-full p-1 shadow-md shadow-green-900 -bottom-2 -right-1 justify-center items-center text-gray-200 text-xs mt-1 transition-color group-hover:bg-indigo-500 group-hover:shadow-indigo-800 transition'>
+						<div className='absolute -bottom-1 -right-1 bg-green-600 rounded-full p-1 shadow-md shadow-green-900 justify-center items-center text-gray-200 text-xs mt-1 transition-color group-hover:bg-indigo-500 group-hover:shadow-indigo-800 transition'>
 							<svg
 								xmlns='http://www.w3.org/2000/svg'
 								fill='none'
@@ -134,20 +186,30 @@ const EditProfile: NextPage = () => {
 						label='이-메일'
 						name='email'
 						placeholder='abcd@efuandyour.car'
-						register={register('email')}
-						onChange={onEmailChange}
+						register={register('email', {
+							onChange: (e) => {
+								onEmptyErrorChange();
+								onEmailOverlapChange(e);
+							},
+						})}
+						err={errors.emailOverlap ? errors.emailOverlap?.message : ''}
 					/>
 					<Input
 						kind='phone'
 						label='폰-남바'
 						name='phone'
 						placeholder='010-1234-5678'
-						register={register('phone')}
-						onChange={onPhoneChange}
+						register={register('phone', {
+							onChange: (e) => {
+								onEmptyErrorChange();
+								onPhoneOverlapChange(e);
+							},
+						})}
+						err={errors.phoneOverlap ? errors.phoneOverlap?.message : ''}
 					/>
 				</div>
-				{errors.setError ? (
-					<div className='text-red-400 text-sm'>{errors.setError.message}</div>
+				{errors.emptyForm ? (
+					<div className='text-red-400 text-sm'>{errors.emptyForm.message}</div>
 				) : null}
 				<Button name={loading ? '수정 중...' : '수정 완료'}></Button>
 			</form>

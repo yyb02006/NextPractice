@@ -138,17 +138,18 @@ export default function Layout({
 	};
 	const svgs = svgsObj();
 	return (
-		<div className='bg-[#101010] h-full min-h-screen relative'>
-			<div className='fixed max-w-lg px-4 h-[60px] bg-[#1a1a1a] shadow-md shadow-[#0a0a0a] w-full text-[20px] text-[#fafafa] font-bold font-GmarketSans top-0 flex items-center'>
+		<div className='bg-[#101010] h-full min-h-screen'>
+			<div className={clsNm('pt-10', hasTabBar ? 'pb-32' : '')}>{children}</div>
+			<div className='fixed top-0 max-w-lg px-4 h-[60px] bg-[#1a1a1a] shadow-md shadow-[#0a0a0a] w-full text-[20px] text-[#fafafa] font-bold font-GmarketSans flex items-center'>
 				{canGoBack ? (
 					<button
 						onClick={onClick}
-						className='text-3xl relative -left-[6px] mr-4 flex justify-center items-center'
+						className='text-3xl mr-4 flex justify-center items-center'
 					>
 						<svg
 							xmlns='http://www.w3.org/2000/svg'
 							fill='none'
-							viewBox='0 0 24 24'
+							viewBox='6 0 24 24'
 							strokeWidth={2}
 							stroke='currentColor'
 							className='w-6 h-6'
@@ -163,7 +164,6 @@ export default function Layout({
 				) : null}
 				{title ? <span className='relative top-[2px]'>{title}</span> : null}
 			</div>
-			<div className={clsNm('pt-10', hasTabBar ? 'pb-32' : '')}>{children}</div>
 			{hasTabBar ? (
 				<nav className='fixed flex pb-4 h-24 justify-around items-center bottom-0 w-full max-w-lg bg-[#1a1a1a] sha'>
 					{svgs.map((svg, i) => (
