@@ -2,18 +2,32 @@ import FloatingButton from '@/components/floating-button';
 import Layout from '@/components/layout';
 import Link from 'next/link';
 import type { NextPage } from 'next';
+import useSWR from 'swr';
+import { Stream } from '@prisma/client';
 
-const Live: NextPage = () => {
+interface StreamsProps {
+	success: boolean;
+	streams: Stream[];
+}
+
+const Streams: NextPage = () => {
+	const { data: streamsData, isLoading } = useSWR<StreamsProps>('/api/streams');
 	return (
 		<Layout title='라이브 커머스' hasTabBar={true}>
 			<div className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12 space-y-6'>
-				{[1, 2, 3, 4, 5, 6].map((arr, i) => (
-					<div key={i}>
-						<Link href={`/streams/${i}`}>
+				{streamsData?.streams.map((stream) => (
+					<div key={stream.Id}>
+						<Link href={`/streams/${stream.Id}`}>
 							<div className='w-full bg-indigo-500 aspect-video rounded-sm'></div>
 							<div className='inline-block mt-2 font-medium text-gray-200 text-sm'>
-								<span className='text-green-500'>우리</span> 스마트폰이
-								달라졌어요!
+								<span className='text-green-500'>
+									{stream.name.length > 1
+										? stream.name.slice(0, 2)
+										: stream.name}
+								</span>
+								{stream.name.length > 1
+									? stream.name.slice(2, stream.name.length)
+									: null}
 							</div>
 						</Link>
 					</div>
@@ -38,4 +52,4 @@ const Live: NextPage = () => {
 	);
 };
 
-export default Live;
+export default Streams;

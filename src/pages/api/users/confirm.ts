@@ -22,7 +22,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 		};
 	await req.session.save();
 	await client.token.deleteMany({ where: { userId: existToken.userId } });
-	res.json({ success: true });
+	if (req.session.user?.id) {
+		res.json({ success: true });
+	}
 }
 
 export default apiSessionWrapper(

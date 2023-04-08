@@ -21,6 +21,7 @@ interface useMutationResult {
 }
 
 export default function Enter() {
+	const router = useRouter();
 	const [send, { loading, data, error }] =
 		useMutation<useMutationResult>('/api/users/enter');
 	const [
@@ -45,11 +46,9 @@ export default function Enter() {
 		send(validData);
 	};
 	const onTokenValid = (validData: TokenForm) => {
-		if (loading) return;
+		if (tokenLoading) return;
 		sendToken(validData);
 	};
-
-	const router = useRouter();
 
 	/**의존성에 배열에 router가 있는이유?
 	 * '이론적'으로 useEffect의 의존성 배열에는 useEffect내부에서 사용하는 모든 변수들이 들어있어야함.

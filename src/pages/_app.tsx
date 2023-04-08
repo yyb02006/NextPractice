@@ -3,7 +3,6 @@ import type { AppProps } from 'next/app';
 import { Roboto } from 'next/font/google';
 import { SWRConfig } from 'swr';
 import { clsNm } from '@/libs/client/utils';
-import useUser from '@/libs/client/useUser';
 import IsLogin from '@/components/IsLogin';
 
 const roboto = Roboto({

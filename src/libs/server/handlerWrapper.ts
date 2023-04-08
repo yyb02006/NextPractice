@@ -26,6 +26,7 @@ export default function handlerWrapper({
 		if (req.method && !methods.includes(req.method as Method)) {
 			return res.status(405).end();
 		}
+		/**세션이 없는 상황에서 enter화면으로 사용자를 내보낼 수 있는 장치 */
 		if (inspection && !req.session.user) {
 			return res.status(401).json({ success: false });
 		}
@@ -34,6 +35,8 @@ export default function handlerWrapper({
 			await func(req, res);
 		} catch (err) {
 			console.log(err);
+			//여기에서 잡히는 에러 중 하나는 own api에서 세션이 없을 때 findUnique가 일으키는 에러가 있음.
+			//그 에러가 useUser로 전달되면 로그인 오류가 하나 생김 지금은 위의 오류를 먼저 발생시키는 것으로 해결
 			res.status(500).json(err);
 		}
 	};

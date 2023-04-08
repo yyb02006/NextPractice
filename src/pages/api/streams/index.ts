@@ -20,6 +20,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 		console.log(price);
 		res.json({ success: true, stream });
 	}
+	if (req.method === 'GET') {
+		const streams = await client.stream.findMany();
+		res.json({ success: true, streams });
+	}
 }
 
 export default apiSessionWrapper(
