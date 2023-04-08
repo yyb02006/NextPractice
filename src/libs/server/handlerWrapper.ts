@@ -26,9 +26,18 @@ export default function handlerWrapper({
 		if (req.method && !methods.includes(req.method as Method)) {
 			return res.status(405).end();
 		}
-		/**세션이 없는 상황에서 enter화면으로 사용자를 내보낼 수 있는 장치 */
+		/**세션의 유무를 검증해서 enter화면으로 사용자를 내보내거나 응답을 주지 않을 수 있는 장치
+		 * headers.referer는 현재페이지를 요청한 이전페이지의 uri정보를 담고 있다. 즉, 어디로부터 왔는지. 이건 여기선 쓸 수 없고,
+		 * 대신 useUser로부터 path정보를 담아서 받고, 이 path정보로 어떤 페이지에서 보낸 요청인지 판별하여
+		 * /enter에서 날린 요청이면 에러를 보내지 않는다.
+		 */
 		if (inspection && !req.session.user) {
-			return res.status(401).json({ success: false });
+			if (req.query.path === '/enter') {
+				return res.end();
+			} else {
+				// console.log(req.url); : 지금 이 리퀘스트가 전달된 url
+				return res.status(401).json({ success: false });
+			}
 		}
 		try {
 			/**why use await? */

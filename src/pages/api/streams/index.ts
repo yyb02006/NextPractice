@@ -17,11 +17,19 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 				user: { connect: { id: user?.id } },
 			},
 		});
-		console.log(price);
 		res.json({ success: true, stream });
 	}
 	if (req.method === 'GET') {
-		const streams = await client.stream.findMany();
+		const {
+			query: { page, size },
+		} = req;
+		if (!page || !size) return;
+		const numSize = +size.toString();
+		const numPage = +page.toString();
+		const streams = await client.stream.findMany({
+			take: numSize,
+			skip: numPage * numSize,
+		});
 		res.json({ success: true, streams });
 	}
 }

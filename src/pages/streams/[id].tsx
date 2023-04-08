@@ -4,12 +4,13 @@ import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import useMutation from '@/libs/client/useMutation';
-import { Message, Stream, User } from '@prisma/client';
+import { Stream } from '@prisma/client';
+import useUser from '@/libs/client/useUser';
 
 interface MessageWithUser {
 	Id: number;
 	chat: string;
-	user: { id: number; name: string; avatar: string };
+	user: { id: number; name: string; avatar: string | null };
 }
 
 interface StreamWithMessage extends Stream {
@@ -27,17 +28,42 @@ interface ChatForm {
 }
 
 const StreamDetail: NextPage = () => {
+	const { user } = useUser();
 	const router = useRouter();
-	const { data: streamData, isLoading } = useSWR<StreamResponse>(
-		//논리연산 안하면 쿼리아이디 없당...
-		router.query.id && `/api/streams/${router.query.id}`
+	const {
+		data: streamData,
+		isLoading,
+		mutate,
+	} = useSWR<StreamResponse>(
+		//논리연산 안하면 첫 랜더링 때 쿼리아이디 없당...
+		router.query.id && `/api/streams/${router.query.id}`,
+		{ refreshInterval: 1000 }
 	);
+
 	const [sendChat, { loading, data: sendChatData }] = useMutation(
 		`/api/streams/${router.query.id}/chats`
 	);
 	const { register, handleSubmit, reset } = useForm<ChatForm>();
 	const onValid = (validData: ChatForm) => {
 		if (loading) return;
+		mutate(
+			(prev) =>
+				prev && {
+					...prev,
+					stream: {
+						...prev.stream,
+						message: [
+							...prev.stream.message,
+							{
+								Id: 3,
+								chat: validData.message,
+								user: { id: user.id, name: user.name, avatar: user.avatar },
+							},
+						],
+					},
+				},
+			false
+		);
 		sendChat(validData);
 		reset();
 	};
@@ -63,7 +89,6 @@ const StreamDetail: NextPage = () => {
 						</div>
 					</div>
 				</div>
-
 				<div className='mt-10 h-[40vh] overflow-y-scroll scrollbar-hide'>
 					{streamData?.stream.message.map((message) =>
 						message.user.id === streamData.stream.userId ? (

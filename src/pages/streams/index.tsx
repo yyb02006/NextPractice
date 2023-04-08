@@ -4,6 +4,7 @@ import Link from 'next/link';
 import type { NextPage } from 'next';
 import useSWR from 'swr';
 import { Stream } from '@prisma/client';
+import { SetStateAction, useEffect, useRef, useState } from 'react';
 
 interface StreamsProps {
 	success: boolean;
@@ -11,12 +12,47 @@ interface StreamsProps {
 }
 
 const Streams: NextPage = () => {
-	const { data: streamsData, isLoading } = useSWR<StreamsProps>('/api/streams');
+	const [page, setPage] = useState(0);
+	const [streams, setStreams] = useState<Stream[]>([]);
+	const {
+		data: streamsData,
+		isLoading,
+		mutate,
+	} = useSWR<StreamsProps>(`/api/streams?page=${page}&size=10`);
+	const options = {
+		root: null,
+		threshold: 0.2,
+	};
+
+	console.log(streams);
+
+	useEffect(() => {
+		if (streamsData?.streams) {
+			setStreams((p) => [...p, ...streamsData?.streams]);
+		}
+	}, [streamsData]);
+
+	const target = useRef<HTMLDivElement | null>(null);
+
+	useEffect(() => {
+		if (target.current && streamsData) {
+			const observer = new IntersectionObserver(async (entries, observer) => {
+				const entry = entries[0];
+				if (entry.isIntersecting && !isLoading) {
+					setPage((p) => p + 1);
+					//할 거 다 하고 unobserve를 해줘야 setPage가 마구잡이로 실행되는 것 막을 수 있음
+					observer.unobserve(entry.target);
+				}
+			}, options);
+			observer.observe(target.current);
+		}
+	}, [target, streamsData, setPage]);
+
 	return (
 		<Layout title='라이브 커머스' hasTabBar={true}>
 			<div className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12 space-y-6'>
-				{streamsData?.streams.map((stream) => (
-					<div key={stream.Id}>
+				{streams.map((stream, index) => (
+					<div key={index}>
 						<Link href={`/streams/${stream.Id}`}>
 							<div className='w-full bg-indigo-500 aspect-video rounded-sm'></div>
 							<div className='inline-block mt-2 font-medium text-gray-200 text-sm'>
@@ -32,6 +68,7 @@ const Streams: NextPage = () => {
 						</Link>
 					</div>
 				))}
+				<div ref={target}></div>
 				<FloatingButton href='/streams/create'>
 					<svg
 						xmlns='http://www.w3.org/2000/svg'
