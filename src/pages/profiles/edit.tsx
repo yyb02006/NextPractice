@@ -7,6 +7,7 @@ import type { NextPage } from 'next';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { ValidationDataProps } from '../api/profiles/own';
+import { imageUrl } from '@/libs/client/utils';
 
 interface EditFormErrors {
 	emptyForm?: string;
@@ -34,8 +35,8 @@ interface PrevForm {
 }
 
 const EditProfile: NextPage = () => {
-	const [preview, setPreview] = useState('');
 	const { user } = useUser();
+	const [preview, setPreview] = useState('');
 
 	const {
 		register,
@@ -73,9 +74,9 @@ const EditProfile: NextPage = () => {
 		}
 	}, [data, setError]);
 
-	const onValid = async (validData: EditForm) => {
+	const onValid = async ({ email, name, phone, avatar }: EditForm) => {
 		if (loading) return;
-		if (!validData.email && !validData.phone) {
+		if (!email && !phone) {
 			setFocus('email');
 			return setError('emptyForm', {
 				message: '님폰없? 님메없?!',
@@ -83,26 +84,26 @@ const EditProfile: NextPage = () => {
 		}
 
 		if (
-			[validData.email, validData.name, validData.phone].every(
+			[email, name, phone].every(
 				(value, idx) => value === [user.email, user.name, user.phone][idx]
 			) &&
-			validData.avatar &&
-			validData.avatar.length === 0
+			avatar &&
+			avatar.length === 0
 		) {
 			return console.log('overlap');
 		}
 
-		if (validData.avatar && validData.avatar.length > 0) {
+		if (avatar && avatar.length > 0) {
 			const { uploadURL } = await (await fetch(`/api/files`)).json();
 			const form = new FormData();
-			form.append('file', validData.avatar[0], user.id.toString());
+			form.append('file', avatar[0], user.id.toString());
 			const {
 				result: { id },
 			} = await (await fetch(uploadURL, { method: 'POST', body: form })).json();
 
-			sendEdited({ ...validData, avatarImageId: id });
+			sendEdited({ email, name, phone, avatarImageId: id });
 		} else {
-			sendEdited(validData);
+			sendEdited({ email, name, phone });
 		}
 	};
 
@@ -132,8 +133,9 @@ const EditProfile: NextPage = () => {
 	const avatar = watch('avatar');
 	useEffect(() => {
 		if (avatar && avatar.length > 0) {
-			const img = avatar[0];
-			setPreview(URL.createObjectURL(img));
+			setPreview(URL.createObjectURL(avatar[0]));
+		} else if (user?.avatar) {
+			setPreview(imageUrl(user.avatar, 'public'));
 		}
 	}, [avatar]);
 	return (
@@ -148,7 +150,10 @@ const EditProfile: NextPage = () => {
 						className='w-32 relative group cursor-pointer'
 					>
 						{preview ? (
-							<img src={preview} className='w-32 aspect-square rounded-lg' />
+							<img
+								src={preview}
+								className='object-cover w-32 aspect-square rounded-lg'
+							/>
 						) : (
 							<div className='bg-pink-400 w-32 aspect-square rounded-lg' />
 						)}

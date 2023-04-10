@@ -7,7 +7,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 	if (req.method === 'POST') {
 		//es6문법
 		const {
-			body: { title, price, description },
+			body: { title, price, description, imageId },
 			session: { user },
 		} = req;
 		const product = await client.product.create({
@@ -19,7 +19,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 				name: title,
 				price: Number(price),
 				desc: description,
-				image: 'none',
+				image: imageId ? imageId : 'none',
 			},
 		});
 		//product.Id만 가져가는 것도 좋지만, prisma client가 Product type을 지원하기 때문에 전체 다 보내는 것도 고려해볼만 함

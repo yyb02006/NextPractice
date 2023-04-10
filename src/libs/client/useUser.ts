@@ -11,7 +11,7 @@ interface UseUser {
 }
 
 export default function useUser(): UseUser {
-	const [preventStateRemain, setPreventStateRemain] = useState(false);
+	// const [preventStateRemain, setPreventStateRemain] = useState(false);
 	const router = useRouter();
 	/**
 	 * 근본적인 원인과 해결방법으로는,
@@ -40,6 +40,6 @@ export default function useUser(): UseUser {
 			return;
 		}
 	}, [data, router]);
-	//로딩때는 data가 없으므로 이럴때는 옵셔널체이닝
+	//로딩때는 data가 없으므로 이럴때는 옵셔널체이닝으로 에러방지
 	return { user: data?.profile, isLoading: isLoading };
 }

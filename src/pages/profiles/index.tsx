@@ -4,7 +4,8 @@ import Link from 'next/link';
 import useUser from '@/libs/client/useUser';
 import useSWR from 'swr';
 import { Review, User } from '@prisma/client';
-import { clsNm } from '@/libs/client/utils';
+import { clsNm, imageUrl } from '@/libs/client/utils';
+import { useEffect } from 'react';
 
 interface ReviewsWithUser extends Review {
 	createdBy: User;
@@ -16,7 +17,7 @@ interface ReviewsProps {
 }
 
 const Profile: NextPage = () => {
-	const { user, isLoading } = useUser();
+	const { user } = useUser();
 	const { data: reviewData } = useSWR<ReviewsProps>(
 		'/api/profiles/own/reviews'
 	);
@@ -24,7 +25,14 @@ const Profile: NextPage = () => {
 		<Layout title='프로필' hasTabBar={true}>
 			<div className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12'>
 				<div className='flex items-center gap-2 mt-4'>
-					<div className='bg-pink-400 w-12 aspect-square rounded-md' />
+					{user?.avatar ? (
+						<img
+							src={imageUrl(user.avatar, 'avatar')}
+							className='object-cover w-16 aspect-square rounded-md'
+						/>
+					) : (
+						<div className='bg-pink-400 w-16 aspect-square rounded-md' />
+					)}
 					<div>
 						<p className='font-medium text-lg'>{user?.name}</p>
 						<Link href='/profiles/edit'>

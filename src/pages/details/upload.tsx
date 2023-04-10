@@ -5,15 +5,17 @@ import Button from '@/components/button';
 import TextArea from '@/components/textarea';
 import { useForm } from 'react-hook-form';
 import useMutation from '@/libs/client/useMutation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Product } from '@prisma/client';
+import useUser from '@/libs/client/useUser';
 
 //서로 같은 폼 내에 있을 때는 인터페이스도 일치시켜서
 interface ProductForm {
 	title: string;
 	price: number;
 	description: string;
+	image: FileList;
 }
 
 interface uploadMutationResult {
@@ -22,19 +24,39 @@ interface uploadMutationResult {
 }
 
 const Upload: NextPage = () => {
+	const { user } = useUser();
+	const router = useRouter();
+	const [uploadLoading, setUploadLoading] = useState(false);
+	const [imagePreview, setImagePreview] = useState('');
 	const [sendProduct, { loading, data, error }] =
 		useMutation<uploadMutationResult>('/api/products');
-	const { register, handleSubmit } = useForm<ProductForm>();
-	const router = useRouter();
-	const onValid = (validData: ProductForm) => {
-		if (loading) return;
-		sendProduct(validData);
+	const { register, handleSubmit, watch } = useForm<ProductForm>();
+	const image = watch('image');
+	const onValid = async ({ title, price, description, image }: ProductForm) => {
+		if (loading || uploadLoading) return;
+		setUploadLoading((p) => (p = true));
+		if (image && image.length > 0) {
+			const { uploadURL } = await (await fetch(`/api/files`)).json();
+			const form = new FormData();
+			form.append('file', image[0], `${user.id.toString()}_product_${title}`);
+			const {
+				result: { id },
+			} = await (await fetch(uploadURL, { method: 'POST', body: form })).json();
+			sendProduct({ title, price, description, imageId: id });
+		}
+		sendProduct({ title, price, description });
+		setUploadLoading((p) => (p = false));
 	};
 	useEffect(() => {
 		if (data?.product && data?.success) {
 			router.push(`/details/${data.product.Id}`);
 		}
 	}, [data, router]);
+	useEffect(() => {
+		if (image && image.length > 0) {
+			setImagePreview(URL.createObjectURL(image[0]));
+		}
+	}, [image]);
 	return (
 		<Layout canGoBack={true}>
 			<div className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12 '>
@@ -54,8 +76,20 @@ const Upload: NextPage = () => {
 								strokeLinejoin='round'
 							/>
 						</svg>
-						<input className='hidden' type='file' />
+						<input
+							{...register('image')}
+							accept='image/*'
+							type='file'
+							className='hidden'
+						/>
 					</label>
+					{imagePreview ? (
+						<img
+							src={imagePreview}
+							alt='your product image'
+							className='rounded-sm'
+						/>
+					) : null}
 					<Input
 						register={register('title', { required: '이름이 없습니다...' })}
 						kind='text'
@@ -83,7 +117,11 @@ const Upload: NextPage = () => {
 						required
 					></TextArea>
 					<Button
-						name={loading ? '상품 진열대에 올리는 중' : '상품 등록하기'}
+						name={
+							loading || uploadLoading
+								? '상품 진열대에 올리는 중'
+								: '상품 등록하기'
+						}
 					></Button>
 				</form>
 			</div>

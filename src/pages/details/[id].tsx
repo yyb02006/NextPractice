@@ -6,7 +6,7 @@ import useSWR from 'swr';
 import Link from 'next/link';
 import { Product, User } from '@prisma/client';
 import useMutation from '@/libs/client/useMutation';
-import { clsNm } from '@/libs/client/utils';
+import { clsNm, imageUrl } from '@/libs/client/utils';
 
 interface ProductWithUser extends Product {
 	user: User;
@@ -64,9 +64,23 @@ const Detail: NextPage = () => {
 		<Layout title='상세정보' canGoBack={true} hasTabBar={true}>
 			<div className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12'>
 				<div>
-					<div className='bg-indigo-600 w-full aspect-square rounded-md' />
+					{data?.product.image && data?.product.image !== 'none' ? (
+						<img
+							src={imageUrl(data?.product.image, 'public')}
+							className='object-contain w-full rounded-sm'
+						/>
+					) : (
+						<div className='bg-indigo-600 w-full aspect-square rounded-sm' />
+					)}
 					<div className='flex items-center gap-2 mt-4'>
-						<div className='bg-pink-400 w-12 aspect-square rounded-md' />
+						{data?.product.user.avatar ? (
+							<img
+								src={imageUrl(data.product.user.avatar, 'avatar')}
+								className='object-cover w-12 aspect-square rounded-sm'
+							/>
+						) : (
+							<div className='bg-pink-400 w-12 aspect-square rounded-sm' />
+						)}
 						<div>
 							<p className='font-medium text-lg'>{data?.product.user?.name}</p>
 							<Link href={`/users/profiles/${data?.product.user?.name}`}>
@@ -136,7 +150,14 @@ const Detail: NextPage = () => {
 					{data?.relatedProducts.map((product) => (
 						<div key={product.Id}>
 							<Link href={`/details/${product.Id}`}>
-								<div className='bg-indigo-500 hover:bg-pink-500 w-full aspect-square rounded-md transition-colors' />
+								{product.image !== 'none' ? (
+									<img
+										src={imageUrl(product.image, 'public')}
+										className='w-full rounded-sm'
+									/>
+								) : (
+									<div className='bg-indigo-500 hover:bg-pink-500 w-full aspect-square rounded-sm transition-colors' />
+								)}
 							</Link>
 							<h3 className='font-medium mt-1'>{product.name}</h3>
 							<p className='font-light text-gray-400 text-sm'>
