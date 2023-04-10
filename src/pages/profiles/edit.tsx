@@ -4,7 +4,7 @@ import Layout from '@/components/layout';
 import useMutation from '@/libs/client/useMutation';
 import useUser from '@/libs/client/useUser';
 import type { NextPage } from 'next';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { ValidationDataProps } from '../api/profiles/own';
 
@@ -18,7 +18,7 @@ interface EditForm extends EditFormErrors {
 	name: string;
 	email?: string;
 	phone?: string;
-	avatar?: string;
+	avatar?: FileList;
 }
 
 interface EditedResponse {
@@ -27,21 +27,15 @@ interface EditedResponse {
 }
 
 interface PrevForm {
-	name: string;
-	email?: string | null;
-	phone?: string | null;
-	avatar?: string | null;
+	name?: string;
+	email?: string;
+	phone?: string;
+	avatar?: FileList;
 }
 
 const EditProfile: NextPage = () => {
+	const [preview, setPreview] = useState('');
 	const { user } = useUser();
-
-	const [prevForm, setPrevForm] = useState<PrevForm>({
-		avatar: user?.avatar ? user.avatar : '',
-		name: user?.name ? user.name : '',
-		phone: user?.phone ? user.phone : '',
-		email: user?.email ? user.email : '',
-	});
 
 	const {
 		register,
@@ -51,6 +45,7 @@ const EditProfile: NextPage = () => {
 		formState: { errors },
 		setFocus,
 		clearErrors,
+		watch,
 	} = useForm<EditForm>();
 
 	const [sendEdited, { data, loading }] =
@@ -59,20 +54,14 @@ const EditProfile: NextPage = () => {
 	useEffect(() => {
 		if (user?.email) {
 			setValue('email', user.email);
-			setPrevForm((p) => ({ ...p, email: user.email }));
 		}
 		if (user?.name) {
 			setValue('name', user.name);
-			setPrevForm((p) => ({ ...p, name: user.name }));
 		}
 		if (user?.phone) {
 			setValue('phone', user.phone);
-			setPrevForm((p) => ({ ...p, phone: user.phone }));
 		}
-		if (user?.avatar) {
-			/**fileObject는 db에서 불러온 값과 어떻게 비교할 것인지? */
-			setValue('avatar', user.avatar);
-		}
+		/**fileObject는 db에서 불러온 값과 어떻게 비교할 것인지? */
 	}, [user, setValue]);
 
 	useEffect(() => {
@@ -84,7 +73,7 @@ const EditProfile: NextPage = () => {
 		}
 	}, [data, setError]);
 
-	const onValid = (validData: EditForm) => {
+	const onValid = async (validData: EditForm) => {
 		if (loading) return;
 		if (!validData.email && !validData.phone) {
 			setFocus('email');
@@ -92,17 +81,29 @@ const EditProfile: NextPage = () => {
 				message: '님폰없? 님메없?!',
 			});
 		}
+
 		if (
-			JSON.stringify({
-				1: validData.email,
-				2: validData.name,
-				3: validData.phone,
-			}) ===
-			JSON.stringify({ 1: prevForm.email, 2: prevForm.name, 3: prevForm.phone })
+			[validData.email, validData.name, validData.phone].every(
+				(value, idx) => value === [user.email, user.name, user.phone][idx]
+			) &&
+			validData.avatar &&
+			validData.avatar.length === 0
 		) {
 			return console.log('overlap');
 		}
-		sendEdited(validData);
+
+		if (validData.avatar && validData.avatar.length > 0) {
+			const { uploadURL } = await (await fetch(`/api/files`)).json();
+			const form = new FormData();
+			form.append('file', validData.avatar[0], user.id.toString());
+			const {
+				result: { id },
+			} = await (await fetch(uploadURL, { method: 'POST', body: form })).json();
+
+			sendEdited({ ...validData, avatarImageId: id });
+		} else {
+			sendEdited(validData);
+		}
 	};
 
 	const onEmptyErrorChange = () => {
@@ -128,21 +129,29 @@ const EditProfile: NextPage = () => {
 		}
 		clearErrors('phoneOverlap');
 	};
-
-	console.log(data);
-
+	const avatar = watch('avatar');
+	useEffect(() => {
+		if (avatar && avatar.length > 0) {
+			const img = avatar[0];
+			setPreview(URL.createObjectURL(img));
+		}
+	}, [avatar]);
 	return (
 		<Layout canGoBack={true}>
 			<form
 				onSubmit={handleSubmit(onValid)}
 				className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12 space-y-4'
 			>
-				<div className='flex justify-start items-center'>
+				<div className='flex'>
 					<label
 						htmlFor='picture'
-						className='relative group cursor-pointer flex flex-col items-end'
+						className='w-32 relative group cursor-pointer'
 					>
-						<div className='bg-pink-400 w-32 aspect-square rounded-lg' />
+						{preview ? (
+							<img src={preview} className='w-32 aspect-square rounded-lg' />
+						) : (
+							<div className='bg-pink-400 w-32 aspect-square rounded-lg' />
+						)}
 						<div className='absolute -bottom-1 -right-1 bg-green-600 rounded-full p-1 shadow-md shadow-green-900 justify-center items-center text-gray-200 text-xs mt-1 transition-color group-hover:bg-indigo-500 group-hover:shadow-indigo-800 transition'>
 							<svg
 								xmlns='http://www.w3.org/2000/svg'
@@ -167,7 +176,7 @@ const EditProfile: NextPage = () => {
 							{...register('avatar')}
 						/>
 					</label>
-					<div className='w-full flex justify-center font-light'>
+					<div className='flex-1 flex justify-center items-center font-light'>
 						<span className='font-medium text-green-400'>{user?.name}</span>님
 						ㅎㅇㅎㅇ^^
 					</div>

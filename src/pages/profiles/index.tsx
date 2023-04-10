@@ -34,8 +34,8 @@ const Profile: NextPage = () => {
 						</Link>
 					</div>
 				</div>
-				<div className='flex justify-around mt-16'>
-					<div className='w-full py-4 hover:bg-green-700 cursor-pointer rounded-sm'>
+				<div className='flex justify-around mt-16 space-x-2'>
+					<div className='w-full py-4 hover:bg-green-700 cursor-pointer rounded-sm bg-[#202020]'>
 						<Link href='/profiles/sold'>
 							<div className='flex flex-col items-center'>
 								<svg
@@ -58,7 +58,7 @@ const Profile: NextPage = () => {
 							</div>
 						</Link>
 					</div>
-					<div className='w-full py-4 hover:bg-green-700 cursor-pointer rounded-sm'>
+					<div className='w-full py-4 hover:bg-green-700 cursor-pointer rounded-sm bg-[#202020]'>
 						<Link href='/profiles/bought'>
 							<div className='flex flex-col items-center'>
 								<svg
@@ -81,7 +81,7 @@ const Profile: NextPage = () => {
 							</div>
 						</Link>
 					</div>
-					<div className='w-full py-4 hover:bg-green-700 cursor-pointer rounded-sm'>
+					<div className='w-full py-4 hover:bg-green-700 cursor-pointer rounded-sm bg-[#202020]'>
 						<Link href='/profiles/favorite'>
 							<div className='flex flex-col items-center'>
 								<svg

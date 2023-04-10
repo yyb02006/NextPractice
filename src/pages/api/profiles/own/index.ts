@@ -13,7 +13,7 @@ export interface ValidationDataProps {
 async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 	const {
 		session: { user },
-		body: { email, name, phone, avatar },
+		body: { email, name, phone, avatarImageId },
 	} = req;
 	const errors: ValidationDataProps = {};
 	const values: ValidationDataProps = {};
@@ -54,6 +54,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 				name: name ? name : 'Anonymous',
 				email: email ? email : null,
 				phone: phone ? phone : null,
+				avatar: avatarImageId ? avatarImageId : null,
 			},
 		});
 		res.json({ success: true });
