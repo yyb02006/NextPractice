@@ -6,6 +6,7 @@ import { apiSessionWrapper } from '@/libs/server/sessionWrapper';
 async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 	const {
 		query: { id },
+		session: { user },
 	} = req;
 	if (!id) return;
 	const strId = id.toString();
@@ -22,6 +23,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 			},
 		},
 	});
+	if (user?.id !== stream?.userId && stream !== null) {
+		Reflect.deleteProperty(stream, 'cloudflareKey');
+		Reflect.deleteProperty(stream, 'cloudflareUrl');
+	}
 	res.json({ success: true, stream });
 }
 

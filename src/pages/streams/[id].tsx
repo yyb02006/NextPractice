@@ -35,8 +35,7 @@ const StreamDetail: NextPage = () => {
 		isLoading,
 		mutate,
 	} = useSWR<StreamResponse>(
-		//논리연산 안하면 첫 랜더링 때 쿼리아이디 없당...
-		router.query.id && `/api/streams/${router.query.id}`,
+		router.query.id ? `/api/streams/${router.query.id}` : null,
 		{ refreshInterval: 1000 }
 	);
 
@@ -72,6 +71,12 @@ const StreamDetail: NextPage = () => {
 			<div className='bg-[#101010] text-[#fafafa] font-SCoreDream py-12'>
 				<div className='w-full'>
 					<div className='relative w-full bg-indigo-500 aspect-video rounded-sm'>
+						<iframe
+							className='w-full aspect-video'
+							src='https://customer-<CODE>.cloudflarestream.com/<VIDEO_UID>/iframe'
+							allow='accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;'
+							allowFullScreen={true}
+						></iframe>
 						<div className='absolute py-2 px-3 font-normal text-sm shadow-md shadow-green-700 bg-green-500 bottom-3 right-4 flex rounded-sm justify-center, items-center'>
 							\ {streamData?.stream.price}
 						</div>
@@ -83,7 +88,24 @@ const StreamDetail: NextPage = () => {
 						<p className='mt-6 text-sm text-gray-300'>
 							{streamData?.stream.description}
 						</p>
-						<div className='mt-6 flex justify-between font-normal text-xs text-gray-400'>
+						<div className='mt-6 font-medium text-xs text-gray-600 overflow-x-scroll scrollbar-hide'>
+							<span className='text-gray-400'>
+								Secret Key <span className='text-red-400'>(공유 금지)</span>
+							</span>
+							<p className='mt-1'>
+								URL:
+								{streamData?.stream.cloudflareKey
+									? streamData?.stream.cloudflareKey
+									: null}
+							</p>
+							<p>
+								KEY:
+								{streamData?.stream.cloudflareKey
+									? streamData?.stream.cloudflareKey
+									: null}
+							</p>
+						</div>
+						<div className='mt-4 flex justify-between font-normal text-xs text-gray-400'>
 							<span>{streamData?.stream.user.name} 님의 라이브</span>
 							<span>2시간째 방송중</span>
 						</div>

@@ -1,9 +1,11 @@
+import { Stream } from '@prisma/client';
 import { useEffect, useState } from 'react';
 
 export default function useInfiniteScroll(
 	isLoading: boolean,
 	threshold: number = 1,
-	onIntersecting?: () => void
+	condition: Stream[] | undefined,
+	onIntersecting: () => void
 ) {
 	const [target, setTarget] = useState<HTMLDivElement | null>(null);
 	const options = {
@@ -14,10 +16,13 @@ export default function useInfiniteScroll(
 	useEffect(() => {
 		const observer = new IntersectionObserver((entries, observer) => {
 			entries.forEach((entry) => {
-				if (entry.isIntersecting && !isLoading) {
-					if (onIntersecting) {
-						onIntersecting();
-					}
+				if (
+					entry.isIntersecting &&
+					!isLoading &&
+					condition &&
+					condition.length > 0
+				) {
+					onIntersecting();
 					observer.unobserve(entry.target);
 				}
 			});

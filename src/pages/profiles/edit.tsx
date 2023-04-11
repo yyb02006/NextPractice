@@ -4,7 +4,7 @@ import Layout from '@/components/layout';
 import useMutation from '@/libs/client/useMutation';
 import useUser from '@/libs/client/useUser';
 import type { NextPage } from 'next';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { ValidationDataProps } from '../api/profiles/own';
 import { imageUrl } from '@/libs/client/utils';

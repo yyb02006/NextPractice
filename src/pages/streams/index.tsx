@@ -7,7 +7,7 @@ import { Stream } from '@prisma/client';
 import { useEffect, useState } from 'react';
 import useInfiniteScroll from '@/libs/client/useInfiniteScroll';
 
-interface StreamsProps {
+export interface StreamsProps {
 	success: boolean;
 	streams: Stream[];
 }
@@ -25,15 +25,18 @@ const Streams: NextPage = () => {
 		setPage((p) => p + 1);
 	}
 
-	console.log(streams);
-
-	const target = useInfiniteScroll(isLoading, 1, onIntersecting);
+	const target = useInfiniteScroll(
+		isLoading,
+		1,
+		streamsData?.streams,
+		onIntersecting
+	);
 
 	useEffect(() => {
-		if (streamsData?.streams) {
+		if (streamsData?.streams && streamsData?.streams.length > 0) {
 			setStreams((p) => [...p, ...streamsData?.streams]);
 		}
-	}, [streamsData]);
+	}, [streamsData?.streams]);
 
 	return (
 		<Layout title='라이브 커머스' hasTabBar={true}>

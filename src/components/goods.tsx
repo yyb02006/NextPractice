@@ -27,7 +27,7 @@ export default function Goods({
 					<span className='text-green-500'>New</span> {title}
 				</h3>
 				<Link href={`/details/${id}`}>
-					<div className='w-full aspect-[1/1] bg-indigo-600 rounded-md mt-1 hover:bg-pink-400 transition-colors'>
+					<div className='w-full bg-indigo-600 rounded-sm mt-1 hover:bg-pink-400 transition-colors'>
 						{children}
 					</div>
 				</Link>

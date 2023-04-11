@@ -151,15 +151,18 @@ enum KindofTrade {
 }
 
 model Stream {
-  Id          Int       @id @default(autoincrement())
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  name        String
-  description String    @db.MediumText
-  price       Int
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      Int
-  message     Message[]
+  Id            Int       @id @default(autoincrement())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  name          String
+  description   String    @db.MediumText
+  price         Int
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        Int
+  message       Message[]
+  cloudflareId  String
+  cloudflareUrl String
+  cloudflareKey String
 
   @@index([userId])
 }

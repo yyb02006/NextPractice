@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { Product, User } from '@prisma/client';
 import useMutation from '@/libs/client/useMutation';
 import { clsNm, imageUrl } from '@/libs/client/utils';
+import Image from 'next/image';
 
 interface ProductWithUser extends Product {
 	user: User;
@@ -69,14 +70,15 @@ const Detail: NextPage = () => {
 							src={imageUrl(data?.product.image, 'public')}
 							className='object-contain w-full rounded-sm'
 						/>
-					) : (
-						<div className='bg-indigo-600 w-full aspect-square rounded-sm' />
-					)}
+					) : null}
 					<div className='flex items-center gap-2 mt-4'>
 						{data?.product.user.avatar ? (
-							<img
+							<Image
+								width={48}
+								height={48}
 								src={imageUrl(data.product.user.avatar, 'avatar')}
 								className='object-cover w-12 aspect-square rounded-sm'
+								alt='avatar'
 							/>
 						) : (
 							<div className='bg-pink-400 w-12 aspect-square rounded-sm' />

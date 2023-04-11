@@ -9,11 +9,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 			`https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ID}/images/v2/direct_upload`,
 			{
 				method: 'POST',
-				headers: { Authorization: `Bearer ${process.env.CLOUDFLARE_KEY}` },
+				headers: {
+					Authorization: `Bearer ${process.env.CLOUDFLARE_IMAGE_KEY}`,
+				},
 			}
 		)
 	).json();
-	console.log(response);
 	res.json({ success: true, ...response.result });
 }
 

@@ -20,6 +20,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 			profile,
 		});
 	} else if (!profile) {
+		if (req.session) {
+			req.session.destroy();
+		}
 		res.json({ success: false });
 	}
 }

@@ -71,6 +71,7 @@ export default function Input({
 							id={name}
 							placeholder={placeholder}
 							className='appearance-none pl-8 pr-12 w-full bg-[#2a2a2a] border-none rounded-sm placeholder-gray-500 outline-none focus:border-green-600 focus:ring-[2px] focus:ring-green-600'
+							onWheel={(e) => e.currentTarget.blur()}
 							required={required}
 							{...register}
 							{...rest}
@@ -110,6 +111,7 @@ export default function Input({
 						placeholder={placeholder}
 						className='appearance-none w-full bg-[#2a2a2a] border-none rounded-sm placeholder-gray-400 outline-none focus:border-green-600 focus:ring-[2px] focus:ring-green-600'
 						required={required}
+						onWheel={(e) => e.currentTarget.blur()}
 						{...register}
 						{...rest}
 					/>

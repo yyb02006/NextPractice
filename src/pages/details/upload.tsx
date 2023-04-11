@@ -43,13 +43,14 @@ const Upload: NextPage = () => {
 				result: { id },
 			} = await (await fetch(uploadURL, { method: 'POST', body: form })).json();
 			sendProduct({ title, price, description, imageId: id });
+		} else {
+			sendProduct({ title, price, description });
 		}
-		sendProduct({ title, price, description });
-		setUploadLoading((p) => (p = false));
 	};
 	useEffect(() => {
 		if (data?.product && data?.success) {
 			router.push(`/details/${data.product.Id}`);
+			setUploadLoading((p) => (p = false));
 		}
 	}, [data, router]);
 	useEffect(() => {

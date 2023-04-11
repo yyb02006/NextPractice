@@ -5,7 +5,6 @@ import Button from '@/components/button';
 import { useForm } from 'react-hook-form';
 import useMutation from '@/libs/client/useMutation';
 import { useRouter } from 'next/router';
-import useUser from '@/libs/client/useUser';
 
 interface EnterForm {
 	phone?: string;
