@@ -36,7 +36,7 @@ const Create: NextPage = () => {
 		}
 	}, [data, router]);
 	return (
-		<Layout canGoBack={true}>
+		<Layout canGoBack={true} seoTitle='라이브 시작하기'>
 			<form
 				onSubmit={handleSubmit(onValid)}
 				className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12 space-y-4'

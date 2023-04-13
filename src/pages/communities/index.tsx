@@ -31,7 +31,7 @@ const Community: NextPage = () => {
 	);
 	const onWonderClick = (vaildData: number) => {};
 	return (
-		<Layout title='질문 & 답변' hasTabBar={true}>
+		<Layout title='질문 & 답변' hasTabBar={true} seoTitle='커뮤니티'>
 			<div className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12 space-y-16'>
 				{postData?.newPosts?.map((post) => (
 					<div key={post.Id} className='flex flex-col'>

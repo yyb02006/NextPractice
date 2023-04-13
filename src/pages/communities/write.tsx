@@ -48,7 +48,7 @@ const Write: NextPage = () => {
 		}
 	}, [data, router]);
 	return (
-		<Layout canGoBack={true}>
+		<Layout canGoBack={true} seoTitle='글쓰기'>
 			<form
 				onSubmit={handleSubmit(onValid)}
 				className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12 space-y-4'

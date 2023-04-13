@@ -67,7 +67,13 @@ const StreamDetail: NextPage = () => {
 		reset();
 	};
 	return (
-		<Layout canGoBack={true} hasTabBar={true}>
+		<Layout
+			canGoBack={true}
+			hasTabBar={true}
+			seoTitle={
+				streamData?.stream.name ? streamData?.stream.name : '라이브 커머스'
+			}
+		>
 			<div className='bg-[#101010] text-[#fafafa] font-SCoreDream py-12'>
 				<div className='w-full'>
 					<div className='relative w-full bg-indigo-500 aspect-video rounded-sm'>

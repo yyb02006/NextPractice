@@ -59,7 +59,7 @@ const Upload: NextPage = () => {
 		}
 	}, [image]);
 	return (
-		<Layout canGoBack={true}>
+		<Layout canGoBack={true} seoTitle='G리는 상품'>
 			<div className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12 '>
 				<form onSubmit={handleSubmit(onValid)} className='space-y-4'>
 					<label className='group w-full h-40 flex justify-center items-center cursor-pointer border-2 border-dashed rounded-md border-gray-500 hover:border-emerald-400'>

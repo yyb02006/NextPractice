@@ -121,7 +121,15 @@ const CommunityPostDetail: NextPage = () => {
 
 	return (
 		<div ref={element}>
-			<Layout canGoBack={true} hasTabBar={true}>
+			<Layout
+				canGoBack={true}
+				hasTabBar={true}
+				seoTitle={
+					detailPostData?.post.question
+						? detailPostData?.post.question
+						: '커뮤니티 질문'
+				}
+			>
 				<div className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12'>
 					<div className='flex items-center gap-2'>
 						<div className='bg-gray-400 w-12 aspect-square rounded-lg' />

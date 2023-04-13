@@ -62,7 +62,12 @@ const Detail: NextPage = () => {
 	};
 
 	return (
-		<Layout title='상세정보' canGoBack={true} hasTabBar={true}>
+		<Layout
+			title='상세정보'
+			canGoBack={true}
+			hasTabBar={true}
+			seoTitle='G리는 상품 상세정보'
+		>
 			<div className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12'>
 				<div>
 					{data?.product.image && data?.product.image !== 'none' ? (

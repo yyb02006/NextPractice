@@ -1,4 +1,5 @@
 import { clsNm } from '@/libs/client/utils';
+import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -7,6 +8,7 @@ interface LayoutProps {
 	title?: string;
 	canGoBack?: boolean;
 	hasTabBar?: boolean;
+	seoTitle: string;
 	children: React.ReactNode;
 }
 
@@ -130,6 +132,7 @@ export default function Layout({
 	title,
 	canGoBack,
 	hasTabBar,
+	seoTitle,
 	children,
 }: LayoutProps) {
 	const router = useRouter();
@@ -139,6 +142,9 @@ export default function Layout({
 	const svgs = svgsObj();
 	return (
 		<div className='bg-[#101010] h-full min-h-screen'>
+			<Head>
+				<title>{seoTitle} | Lab G Market</title>
+			</Head>
 			<div className={clsNm('pt-10', hasTabBar ? 'pb-32' : '')}>{children}</div>
 			<div className='fixed top-0 max-w-lg px-4 h-[60px] bg-[#1a1a1a] shadow-md shadow-[#0a0a0a] w-full text-[20px] text-[#fafafa] font-bold font-GmarketSans flex items-center'>
 				{canGoBack ? (

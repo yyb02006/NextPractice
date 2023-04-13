@@ -19,7 +19,7 @@ const Trade: NextPage = () => {
 		'/api/profiles/own/favorites'
 	);
 	return (
-		<Layout canGoBack={true} hasTabBar={true}>
+		<Layout canGoBack={true} hasTabBar={true} seoTitle='내가 찜쪄먹을 상품들'>
 			<div className='bg-[#101010] text-[#fafafa] font-Roboto pt-12 px-4 space-y-4'>
 				{favoriteData?.favorites.map((favorite) => (
 					<div key={favorite.Id}>

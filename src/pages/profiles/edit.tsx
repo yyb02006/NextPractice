@@ -139,7 +139,7 @@ const EditProfile: NextPage = () => {
 		}
 	}, [avatar]);
 	return (
-		<Layout canGoBack={true}>
+		<Layout canGoBack={true} seoTitle='고객정보 변경'>
 			<form
 				onSubmit={handleSubmit(onValid)}
 				className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12 space-y-4'

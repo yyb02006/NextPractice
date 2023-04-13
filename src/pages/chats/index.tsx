@@ -4,7 +4,11 @@ import ChatRoom from '@/components/chat-room';
 
 const chat: NextPage = () => {
 	return (
-		<Layout title='키보드 배틀' hasTabBar={true}>
+		<Layout
+			title='키보드 배틀'
+			hasTabBar={true}
+			seoTitle='키보드 싸이퍼 경기 목록'
+		>
 			<div className='bg-[#101010] text-[#fafafa] font-SCoreDream py-12 space-y-4'>
 				{[1, 2, 3, 4, 5, 6, 7, 8, 9].map((arr, i) => (
 					<div key={i}>

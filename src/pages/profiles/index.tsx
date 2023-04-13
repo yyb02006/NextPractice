@@ -22,7 +22,7 @@ const Profile: NextPage = () => {
 		'/api/profiles/own/reviews'
 	);
 	return (
-		<Layout title='프로필' hasTabBar={true}>
+		<Layout title='프로필' hasTabBar={true} seoTitle='프로필'>
 			<div className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12'>
 				<div className='flex items-center gap-2 mt-4'>
 					{user?.avatar ? (

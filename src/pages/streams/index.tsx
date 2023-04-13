@@ -39,7 +39,7 @@ const Streams: NextPage = () => {
 	}, [streamsData?.streams]);
 
 	return (
-		<Layout title='라이브 커머스' hasTabBar={true}>
+		<Layout title='라이브 커머스' hasTabBar={true} seoTitle='라이브 커머스'>
 			<div className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12 space-y-6'>
 				{streams.map((stream, index) => (
 					<div

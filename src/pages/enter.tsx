@@ -5,6 +5,7 @@ import Button from '@/components/button';
 import { useForm } from 'react-hook-form';
 import useMutation from '@/libs/client/useMutation';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 
 interface EnterForm {
 	phone?: string;
@@ -60,6 +61,9 @@ export default function Enter() {
 
 	return (
 		<div className='bg-[#101010] text-[#fafafa] border-[#fafafa] overflow-hidden h-screen font-SCoreDream'>
+			<Head>
+				<title>로그인</title>
+			</Head>
 			<div className='font-GmarketSans flex flex-col items-center -space-y-2 mt-14 mb-14'>
 				<span className='font-bold text-[46px]'>
 					실험용<span className='text-green-500'>쥐</span>-마켓

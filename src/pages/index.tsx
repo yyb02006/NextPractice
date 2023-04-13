@@ -22,7 +22,7 @@ const Home: NextPage = () => {
 		isLoading: productLoading,
 	} = useSWR<ProductProps>('/api/products');
 	return (
-		<Layout title='집구석' hasTabBar={true}>
+		<Layout title='집구석' hasTabBar={true} seoTitle='G리는 상품 목록'>
 			<div className='bg-[#101010] text-[#fafafa] font-Roboto pt-12 px-4 space-y-4'>
 				{productData?.products?.map((product) => (
 					<Goods

@@ -4,7 +4,7 @@ import Chat from '@/components/chat';
 
 const ChatDetail: NextPage = () => {
 	return (
-		<Layout canGoBack={true}>
+		<Layout canGoBack={true} seoTitle='키보드 싸이퍼 경기장'>
 			<div className='bg-[#101010] text-[#fafafa] font-SCoreDream py-12'>
 				<Chat
 					name='Steve Jebs'
