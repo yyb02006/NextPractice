@@ -30,12 +30,13 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
 			 * 자 이제 어떻게 db요청을 날리지?
 			 * 일단 미들웨어가 실행 될 시점에는 쿠키를 인식하지 못한다.
 			 */
+			//{success: false}
 			const own = await (
 				await fetch('http://localhost:3000/api/users/own?path=/', {
 					method: 'GET',
 				})
 			).json();
-			console.log(session);
+			// console.log(session);
 		}
 	}
 }

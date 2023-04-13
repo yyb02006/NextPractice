@@ -140,10 +140,11 @@ export default function Layout({
 		router.back();
 	};
 	const svgs = svgsObj();
+	/**title element에 자식요소를 props+string 형태로 넣어버리면 배열로 인식됨 아마도 [{seoTitle}, | Lab G Market]형태인듯 */
 	return (
 		<div className='bg-[#101010] h-full min-h-screen'>
 			<Head>
-				<title>{seoTitle} | Lab G Market</title>
+				<title>{`${seoTitle} | Lab G Market`}</title>
 			</Head>
 			<div className={clsNm('pt-10', hasTabBar ? 'pb-32' : '')}>{children}</div>
 			<div className='fixed top-0 max-w-lg px-4 h-[60px] bg-[#1a1a1a] shadow-md shadow-[#0a0a0a] w-full text-[20px] text-[#fafafa] font-bold font-GmarketSans flex items-center'>

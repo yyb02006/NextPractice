@@ -2,9 +2,10 @@ import FloatingButton from '@/components/floating-button';
 import Layout from '@/components/layout';
 import type { NextPage } from 'next';
 import Goods from '@/components/goods';
-import useSWR from 'swr';
+import useSWR, { SWRConfig } from 'swr';
 import { Product } from '@prisma/client';
 import { imageUrl } from '@/libs/client/utils';
+import client from '@/libs/server/client';
 
 export interface ProductWithCount extends Product {
 	_count: { Favorite: number };
@@ -30,7 +31,7 @@ const Home: NextPage = () => {
 						comment={5}
 						id={product.Id}
 						key={product.Id}
-						like={product._count.Favorite}
+						like={product._count?.Favorite || 0}
 						price={product.price}
 						title={product.name}
 					>
@@ -80,4 +81,28 @@ const Home: NextPage = () => {
 	);
 };
 
-export default Home;
+const Page: NextPage<{ products: ProductWithCount[] }> = ({ products }) => {
+	return (
+		<SWRConfig
+			value={{
+				fallback: {
+					'/api/products': {
+						ok: true,
+						products,
+					},
+				},
+			}}
+		>
+			<Home />
+		</SWRConfig>
+	);
+};
+
+export async function getServerSideProps() {
+	const products = await client.product.findMany({});
+	return {
+		props: { products: JSON.parse(JSON.stringify(products)) },
+	};
+}
+
+export default Page;
