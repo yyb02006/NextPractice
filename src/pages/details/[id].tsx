@@ -1,5 +1,5 @@
 import Layout from '@/components/layout';
-import type { NextPage } from 'next';
+import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import Button from '@/components/button';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
@@ -8,23 +8,27 @@ import { Product, User } from '@prisma/client';
 import useMutation from '@/libs/client/useMutation';
 import { clsNm, imageUrl } from '@/libs/client/utils';
 import Image from 'next/image';
+import client from '@/libs/server/client';
 
 interface ProductWithUser extends Product {
 	user: User;
 }
 
-interface DetailProductProps {
-	success: boolean;
-	isLiked: boolean;
+interface DetailProps {
 	product: ProductWithUser;
 	relatedProducts: Product[];
+}
+
+interface DetailProductProps extends DetailProps {
+	success: boolean;
+	isLiked: boolean;
 }
 
 interface useMutationResult {
 	success: boolean;
 }
 
-const Detail: NextPage = () => {
+const Detail: NextPage<DetailProps> = ({ product, relatedProducts }) => {
 	const router = useRouter();
 
 	/**
@@ -70,18 +74,18 @@ const Detail: NextPage = () => {
 		>
 			<div className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12'>
 				<div>
-					{data?.product.image && data?.product.image !== 'none' ? (
+					{product.image && product.image !== 'none' ? (
 						<img
-							src={imageUrl(data?.product.image, 'public')}
+							src={imageUrl(product.image, 'public')}
 							className='object-contain w-full rounded-sm'
 						/>
 					) : null}
 					<div className='flex items-center gap-2 mt-4'>
-						{data?.product.user.avatar ? (
+						{product.user.avatar ? (
 							<Image
 								width={48}
 								height={48}
-								src={imageUrl(data.product.user.avatar, 'avatar')}
+								src={imageUrl(product.user.avatar, 'avatar')}
 								className='object-cover w-12 aspect-square rounded-sm'
 								alt='avatar'
 							/>
@@ -89,8 +93,8 @@ const Detail: NextPage = () => {
 							<div className='bg-pink-400 w-12 aspect-square rounded-sm' />
 						)}
 						<div>
-							<p className='font-medium text-lg'>{data?.product.user?.name}</p>
-							<Link href={`/users/profiles/${data?.product.user?.name}`}>
+							<p className='font-medium text-lg'>{product.user?.name}</p>
+							<Link href={`/users/profiles/${product.user?.name}`}>
 								<p className='font-normal text-xs text-gray-400 cursor-pointer hover:text-gray-300 hover:translate-x-1 transition'>
 									자세히 알아보기 &rarr;
 								</p>
@@ -99,16 +103,14 @@ const Detail: NextPage = () => {
 					</div>
 					<div className='mt-8'>
 						<h1 className='font-bold text-right text-3xl'>
-							{data?.product.name.slice(0, data.product.name.length - 1)}
-							<span className='text-green-500'>
-								{data?.product.name.slice(-1)}
-							</span>
+							<span className='text-green-500'>{product.name.slice(0, 1)}</span>
+							{product.name.slice(1, product.name.length)}
 						</h1>
 						<p className='font-medium text-gray-400 text-right text-base mr-[2px] mt-2'>
-							￦{data?.product.price}
+							￦{product.price}
 						</p>
 						<p className='mt-6 font-light leading-[32px] text-sm text-gray-200'>
-							{data?.product.desc}
+							{product.desc}
 						</p>
 						{/**z-index의 함정을 잘 기억해두자 https://dev.epiloum.net/904*/}
 						<div className='relative z-[0] mt-10 flex justify-start h-10'>
@@ -144,17 +146,15 @@ const Detail: NextPage = () => {
 						</div>
 					</div>
 				</div>
-				{data?.relatedProducts.length ? (
+				{relatedProducts.length ? (
 					<h2 className='font-GmarketSans font-semibold text-3xl mt-24'>
 						<span className='text-green-500'>더! 더!</span> 많~은{' '}
-						{data?.product.name.slice(0, data.product.name.length - 1)}
-						<span className='text-green-500'>
-							{data?.product.name.slice(-1)}
-						</span>
+						{product.name.slice(0, product.name.length - 1)}
+						<span className='text-green-500'>{product.name.slice(-1)}</span>
 					</h2>
 				) : null}
 				<div className='mt-2 grid grid-cols-2 gap-x-2 gap-y-2'>
-					{data?.relatedProducts.map((product) => (
+					{relatedProducts.map((product) => (
 						<div key={product.Id}>
 							<Link href={`/details/${product.Id}`}>
 								{product.image !== 'none' ? (
@@ -176,6 +176,41 @@ const Detail: NextPage = () => {
 			</div>
 		</Layout>
 	);
+};
+
+export const getStaticPaths: GetStaticPaths = () => {
+	return {
+		paths: [],
+		fallback: 'blocking',
+	};
+};
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+	if (!ctx.params?.id) return { props: {} };
+	const strProductId = ctx.params.id.toString();
+	const product = await client.product.findUnique({
+		where: {
+			Id: +strProductId,
+		},
+		include: { user: { select: { name: true, id: true, avatar: true } } },
+	});
+	const term = product?.name
+		.split(' ')
+		.map((word) => ({ name: { contains: word } }));
+	const relatedProducts = await client.product.findMany({
+		where: {
+			OR: term,
+			AND: {
+				Id: { not: +strProductId },
+			},
+		},
+	});
+	return {
+		props: {
+			product: JSON.parse(JSON.stringify(product)),
+			relatedProducts: JSON.parse(JSON.stringify(relatedProducts)),
+		},
+	};
 };
 
 export default Detail;

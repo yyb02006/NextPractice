@@ -10,7 +10,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 	} = req;
 	if (!id) return;
 	const strProductId = id.toString();
-	const product = await client.product.findUnique({
+	/* const product = await client.product.findUnique({
 		where: {
 			Id: +strProductId,
 		},
@@ -19,6 +19,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 	const term = product?.name
 		.split(' ')
 		.map((word) => ({ name: { contains: word } }));
+	
+	AND는 contains같은 세부적인 조건이 필요할 때나 쓰고 단순히 두 가지 필드를 조건으로 레코드를 불러오고 싶다면
+	그냥 필드 조건을 두 번 적으면 된다. (product.Id == strProductId)
 	const relatedProducts = await client.product.findMany({
 		where: {
 			OR: term,
@@ -27,14 +30,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 			},
 		},
 	});
-	/**
-	 * AND는 contians같은 세부적인 조건이 필요할 때나 쓰고 단순히 두 가지 필드를 조건으로 레코드를 불러오고 싶다면
-	 * 그냥 필드 조건을 두 번 적으면 된다. (product.Id == strProductId)
-	 */
+	console.log(product?.Id + ',' + id); */
 	const isLiked = Boolean(
 		await client.favorite.findFirst({
 			where: {
-				productId: product?.Id,
+				productId: +strProductId,
 				userId: user?.id,
 			},
 			select: {
@@ -43,7 +43,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 			},
 		})
 	);
-	res.json({ success: true, isLiked, product, relatedProducts });
+	res.json({ success: true, isLiked });
 }
 
 export default apiSessionWrapper(

@@ -14,19 +14,14 @@ const Post: NextPage<{ post: string }> = ({ post }) => {
  * 마크다운을 통해서든 어떻게 해서든 작성된 글을 정적페이지로 소화할 수 있어야함
  * */
 export const getStaticPaths: GetStaticPaths = () => {
-	const files = readdirSync('./src/posts').map((file) => {
-		const [name, _] = file.split('.');
-		return { params: { slug: name } };
-	});
-
 	return {
-		paths: files,
-		fallback: false,
+		paths: [],
+		fallback: 'blocking',
 	};
 };
 
-export const getStaticProps: GetStaticProps = async (ctx: any) => {
-	const { content } = matter.read(`./src/posts/${ctx.params.slug}.md`);
+export const getStaticProps: GetStaticProps = async (ctx) => {
+	const { content } = matter.read(`./src/posts/${ctx.params?.slug}.md`);
 	const { value } = await unified()
 		.use(remarkParse)
 		.use(remarkHtml)

@@ -1,5 +1,5 @@
 import Layout from '@/components/layout';
-import type { NextPage } from 'next';
+import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import Button from '@/components/button';
 import TextArea from '@/components/textarea';
 import { useRouter } from 'next/router';
@@ -116,8 +116,6 @@ const CommunityPostDetail: NextPage = () => {
 			sendWonderToo({});
 		}
 	};
-
-	console.log(detailPostData);
 
 	return (
 		<div ref={element}>
@@ -239,5 +237,17 @@ const CommunityPostDetail: NextPage = () => {
 		</div>
 	);
 };
+
+// export const getStaticPaths: GetStaticPaths = async () => {
+// 	return {
+// 		paths: [],
+// 		fallback: 'blcoking',
+// 	};
+// };
+
+// export const getStaticProps: GetStaticProps = async (ctx) => {
+// 	if (!ctx.params.id) return { props: {} };
+// 	return { props: {} };
+// };
 
 export default CommunityPostDetail;

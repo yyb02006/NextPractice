@@ -3,7 +3,7 @@ import Layout from '@/components/layout';
 import useCoords from '@/libs/client/useCoord';
 import { clsNm } from '@/libs/client/utils';
 import { Post } from '@prisma/client';
-import type { NextPage } from 'next';
+import type { GetStaticProps, NextPage } from 'next';
 import Link from 'next/link';
 import useSWR from 'swr';
 import client from '@/libs/server/client';
@@ -122,7 +122,7 @@ const Community: NextPage<PostProps> = ({ newPosts }) => {
 	);
 };
 
-export async function getStaticProps() {
+export const getStaticProps: GetStaticProps = async (ctx) => {
 	const newPosts = await client.post.findMany({
 		include: {
 			user: { select: { name: true } },
@@ -139,6 +139,6 @@ export async function getStaticProps() {
 	return {
 		props: { newPosts: JSON.parse(JSON.stringify(newPosts)) },
 	};
-}
+};
 
 export default Community;
