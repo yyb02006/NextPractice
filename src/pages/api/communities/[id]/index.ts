@@ -13,8 +13,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 	if (req.method === 'GET') {
 		const post = await client.post.findUnique({
 			where: { Id: +strPostId },
-			include: {
-				user: { select: { id: true, name: true, avatar: true } },
+			select: {
 				answer: {
 					select: {
 						answer: true,
@@ -24,6 +23,17 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 				},
 				_count: { select: { answer: true, wonderToo: true } },
 			},
+			// include: {
+			// 	user: { select: { id: true, name: true, avatar: true } },
+			// answer: {
+			// 	select: {
+			// 		answer: true,
+			// 		Id: true,
+			// 		user: { select: { id: true, name: true, avatar: true } },
+			// 	},
+			// },
+			// 	_count: { select: { answer: true, wonderToo: true } },
+			// },
 		});
 		const isWonderToo = Boolean(
 			await client.wonderToo.findFirst({
@@ -49,7 +59,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 				post: { connect: { Id: +strPostId } },
 			},
 		});
-
 		res.json({ success: true, answerResponse });
 	}
 }

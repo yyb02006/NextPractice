@@ -3,12 +3,13 @@ import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import Button from '@/components/button';
 import TextArea from '@/components/textarea';
 import { useRouter } from 'next/router';
-import useSWR from 'swr';
+import useSWR, { SWRConfig } from 'swr';
 import useMutation from '@/libs/client/useMutation';
 import { useForm } from 'react-hook-form';
 import { Answer, Post, User } from '@prisma/client';
 import { useEffect, useRef } from 'react';
 import { clsNm } from '@/libs/client/utils';
+import client from '@/libs/server/client';
 
 interface AnswerForm {
 	answer: string;
@@ -35,7 +36,15 @@ interface useMutationResult {
 	success: boolean;
 }
 
-const CommunityPostDetail: NextPage = () => {
+interface CommunityPostDetailProps {
+	status?: number;
+	post: PostWithMany;
+}
+
+const CommunityPostDetail: NextPage<CommunityPostDetailProps> = ({
+	status,
+	post,
+}) => {
 	const router = useRouter();
 	const { register, reset, handleSubmit } = useForm<AnswerForm>();
 	const element = useRef<HTMLDivElement>(null);
@@ -122,19 +131,13 @@ const CommunityPostDetail: NextPage = () => {
 			<Layout
 				canGoBack={true}
 				hasTabBar={true}
-				seoTitle={
-					detailPostData?.post.question
-						? detailPostData?.post.question
-						: '커뮤니티 질문'
-				}
+				seoTitle={post.question ? post.question : '커뮤니티 질문'}
 			>
 				<div className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12'>
 					<div className='flex items-center gap-2'>
 						<div className='bg-gray-400 w-12 aspect-square rounded-lg' />
 						<div>
-							<p className='font-medium text-lg'>
-								{detailPostData?.post.user.name}
-							</p>
+							<p className='font-medium text-lg'>{post.user.name}</p>
 							<p className='font-SCoreDream font-normal text-xs text-gray-400 cursor-pointer hover:text-gray-300 hover:translate-x-1 transition'>
 								자세히 알아보기 &rarr;
 							</p>
@@ -142,13 +145,10 @@ const CommunityPostDetail: NextPage = () => {
 					</div>
 					<div className='flex flex-col mt-8'>
 						<span className='font-GmarketSans font-bold text-xl'>
-							<span className='text-green-500'>
-								#{detailPostData?.post.category}
-							</span>
+							<span className='text-green-500'>#{post.category}</span>
 						</span>
 						<span className='mt-1'>
-							<span className='text-xl text-pink-400'>Q.</span>{' '}
-							{detailPostData?.post.question}
+							<span className='text-xl text-pink-400'>Q.</span> {post.question}
 						</span>
 						<div className='mt-12 flex justify-end items-center font-light gap-4 text-sm text-gray-200'>
 							<button
@@ -197,25 +197,45 @@ const CommunityPostDetail: NextPage = () => {
 						</div>
 					</div>
 					<div className='mt-4 space-y-6'>
-						{detailPostData?.post.answer.map((answer) => (
-							<div key={answer.Id} className='bg-[#1a1a1a] p-4 rounded-md'>
-								<div className='flex items-center gap-2'>
-									<div className='bg-gray-400 w-8 aspect-square rounded-lg' />
-									<div>
-										<p className='font-light text-sm text-gray-200'>
-											{answer.user.name}
-										</p>
-										<p className='font-SCoreDream font-normal text-xs text-gray-500'>
-											2시간 전
-										</p>
+						{detailPostData?.post.answer
+							? detailPostData?.post.answer.map((answer) => (
+									<div key={answer.Id} className='bg-[#1a1a1a] p-4 rounded-md'>
+										<div className='flex items-center gap-2'>
+											<div className='bg-gray-400 w-8 aspect-square rounded-lg' />
+											<div>
+												<p className='font-light text-sm text-gray-200'>
+													{answer.user.name}
+												</p>
+												<p className='font-SCoreDream font-normal text-xs text-gray-500'>
+													2시간 전
+												</p>
+											</div>
+										</div>
+										<div className='mt-6 text-base font-light text-gray-200'>
+											<span className='text-lg text-green-500'>A.</span>{' '}
+											{answer.answer}
+										</div>
 									</div>
-								</div>
-								<div className='mt-6 text-base font-light text-gray-200'>
-									<span className='text-lg text-green-500'>A.</span>{' '}
-									{answer.answer}
-								</div>
-							</div>
-						))}
+							  ))
+							: post.answer.map((answer) => (
+									<div key={answer.Id} className='bg-[#1a1a1a] p-4 rounded-md'>
+										<div className='flex items-center gap-2'>
+											<div className='bg-gray-400 w-8 aspect-square rounded-lg' />
+											<div>
+												<p className='font-light text-sm text-gray-200'>
+													{answer.user.name}
+												</p>
+												<p className='font-SCoreDream font-normal text-xs text-gray-500'>
+													2시간 전
+												</p>
+											</div>
+										</div>
+										<div className='mt-6 text-base font-light text-gray-200'>
+											<span className='text-lg text-green-500'>A.</span>{' '}
+											{answer.answer}
+										</div>
+									</div>
+							  ))}
 					</div>
 					<form onSubmit={handleSubmit(onValid)} className='space-y-4 mt-8'>
 						<TextArea
@@ -238,16 +258,34 @@ const CommunityPostDetail: NextPage = () => {
 	);
 };
 
-// export const getStaticPaths: GetStaticPaths = async () => {
-// 	return {
-// 		paths: [],
-// 		fallback: 'blcoking',
-// 	};
-// };
+export const getStaticPaths: GetStaticPaths = () => {
+	return {
+		paths: [],
+		fallback: 'blocking',
+	};
+};
 
-// export const getStaticProps: GetStaticProps = async (ctx) => {
-// 	if (!ctx.params.id) return { props: {} };
-// 	return { props: {} };
-// };
+export const getStaticProps: GetStaticProps = async (ctx) => {
+	if (!ctx.params?.id) return { props: {} };
+	const strPostId = ctx.params.id.toString();
+	const post = await client.post.findUnique({
+		where: { Id: +strPostId },
+		include: {
+			user: { select: { id: true, name: true, avatar: true } },
+			answer: {
+				select: {
+					answer: true,
+					Id: true,
+					user: { select: { id: true, name: true, avatar: true } },
+				},
+			},
+			_count: { select: { answer: true, wonderToo: true } },
+		},
+	});
+	if (!post) {
+		return { props: { status: 404 } };
+	}
+	return { props: { post: JSON.parse(JSON.stringify(post)) } };
+};
 
 export default CommunityPostDetail;

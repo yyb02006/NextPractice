@@ -11,7 +11,7 @@ import client from '@/libs/server/client';
 interface PostWithUser extends Post {
 	user: { name: string };
 	_count: { wonderToo: number; answer: number };
-	// isWonderToo: boolean;
+	isWonderToo?: boolean;
 }
 
 interface PostProps {
@@ -62,7 +62,15 @@ const Community: NextPage<PostProps> = ({ newPosts }) => {
 								className='flex items-center gap-1'
 							>
 								<span
-								// className={clsNm(post.isWonderToo ? 'text-green-400' : '')}
+								/* 
+								ssg로 구현할 때는 map에 뒤늦게 클라이언트사이드의 데이터를 붙일 수가 없어서 
+								유저에 따른 커스터마이징은 힘들어 보임
+								className={clsNm(
+									postData?.newPosts[post.Id]?.isWonderToo
+										? 'text-green-400'
+										: ''
+								)} 
+								*/
 								>
 									<svg
 										className='w-4 h-4'
