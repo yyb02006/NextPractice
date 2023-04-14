@@ -32,7 +32,7 @@ export default function RadioButton({
 						category === buttonValues[index]
 							? 'bg-indigo-600 shadow-indigo-800'
 							: 'bg-green-600 shadow-green-800 hover:bg-indigo-500 hover:shadow-indigo-600',
-						'inline-block mr-3 shadow-md active:bg-indigo-600 font-medium text-sm rounded-sm px-4 py-2'
+						'cursor-pointer inline-block mr-3 shadow-md active:bg-indigo-600 font-medium text-sm rounded-sm px-4 py-2'
 					)}
 				>
 					<input

@@ -18,6 +18,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResType>) {
 			user: { connect: { id: user?.id } },
 		},
 	});
+	await res.revalidate('/communities');
 	res.json({ success: true, post });
 }
 

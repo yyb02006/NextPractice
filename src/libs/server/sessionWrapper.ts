@@ -1,4 +1,7 @@
-import { withIronSessionApiRoute as ironSession } from 'iron-session/next';
+import {
+	withIronSessionApiRoute as ironSession,
+	withIronSessionSsr,
+} from 'iron-session/next';
 import { NextApiHandler } from 'next';
 
 declare module 'iron-session' {
@@ -16,4 +19,8 @@ const cookieOptions = {
 
 export function apiSessionWrapper(fn: NextApiHandler) {
 	return ironSession(fn, cookieOptions);
+}
+
+export function ssrSessionWrapper(handler: any) {
+	return withIronSessionSsr(handler, cookieOptions);
 }

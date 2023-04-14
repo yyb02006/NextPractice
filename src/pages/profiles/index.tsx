@@ -1,11 +1,12 @@
-import type { NextPage } from 'next';
+import type { NextPage, NextPageContext } from 'next';
 import Layout from '@/components/layout';
 import Link from 'next/link';
 import useUser from '@/libs/client/useUser';
-import useSWR from 'swr';
+import useSWR, { SWRConfig } from 'swr';
 import { Review, User } from '@prisma/client';
 import { clsNm, imageUrl } from '@/libs/client/utils';
-import { useEffect } from 'react';
+import { ssrSessionWrapper } from '@/libs/server/sessionWrapper';
+import client from '@/libs/server/client';
 
 interface ReviewsWithUser extends Review {
 	createdBy: User;
@@ -164,4 +165,35 @@ const Profile: NextPage = () => {
 	);
 };
 
-export default Profile;
+const Page: NextPage<{ profile: User }> = ({ profile }) => {
+	return (
+		<SWRConfig
+			value={{
+				//key값은 query내용까지 포함
+				fallback: {
+					'/api/users/own?path=/profiles': { success: true, profile },
+				},
+			}}
+		>
+			<Profile />
+		</SWRConfig>
+	);
+};
+
+/**
+ * 복잡해보이는 함수일 수 있지만, getServerSideProps라는 함수는 {props:{}}을 리턴하기만 하면 되기 때문에,
+ * {props:{}}를 리턴할 수 있는 모양이면 콜백을 사용하는 함수던, 어떤 함수던 상관없이 props를 전달할 수 있다.
+ */
+export const getServerSideProps = ssrSessionWrapper(async function ({
+	req,
+}: NextPageContext) {
+	const profile = await client.user.findUnique({
+		where: { id: req?.session.user?.id },
+	});
+	console.log('1111111111' + JSON.stringify(profile));
+
+	//nextjs가 date객체직렬화(객체를 byte단위로 주고받기 위해 일자로 나열하는 것)를 못함
+	return { props: { profile: JSON.parse(JSON.stringify(profile)) } };
+});
+
+export default Page;

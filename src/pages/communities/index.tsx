@@ -6,19 +6,20 @@ import { Post } from '@prisma/client';
 import type { NextPage } from 'next';
 import Link from 'next/link';
 import useSWR from 'swr';
+import client from '@/libs/server/client';
 
 interface PostWithUser extends Post {
 	user: { name: string };
 	_count: { wonderToo: number; answer: number };
-	isWonderToo: boolean;
+	// isWonderToo: boolean;
 }
 
 interface PostProps {
-	success: boolean;
+	// success: boolean;
 	newPosts: PostWithUser[];
 }
 
-const Community: NextPage = () => {
+const Community: NextPage<PostProps> = ({ newPosts }) => {
 	const { latitude, longitude } = useCoords();
 	const {
 		data: postData,
@@ -33,7 +34,7 @@ const Community: NextPage = () => {
 	return (
 		<Layout title='질문 & 답변' hasTabBar={true} seoTitle='커뮤니티'>
 			<div className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12 space-y-16'>
-				{postData?.newPosts?.map((post) => (
+				{newPosts?.map((post) => (
 					<div key={post.Id} className='flex flex-col'>
 						<span className='text-green-500 font-GmarketSans font-bold text-xl'>
 							#{post.category}
@@ -61,7 +62,7 @@ const Community: NextPage = () => {
 								className='flex items-center gap-1'
 							>
 								<span
-									className={clsNm(post.isWonderToo ? 'text-green-400' : '')}
+								// className={clsNm(post.isWonderToo ? 'text-green-400' : '')}
 								>
 									<svg
 										className='w-4 h-4'
@@ -120,5 +121,24 @@ const Community: NextPage = () => {
 		</Layout>
 	);
 };
+
+export async function getStaticProps() {
+	const newPosts = await client.post.findMany({
+		include: {
+			user: { select: { name: true } },
+			_count: { select: { wonderToo: true, answer: true } },
+		},
+	});
+	// const userWonderToo = await client.wonderToo.findMany({
+	// 	where: { userId: user?.id },
+	// });
+	// const newPosts = posts.map((post) => ({
+	// 	...post,
+	// 	isWonderToo: Boolean(userWonderToo.find((post) => post.postId === post.Id)),
+	// }));
+	return {
+		props: { newPosts: JSON.parse(JSON.stringify(newPosts)) },
+	};
+}
 
 export default Community;

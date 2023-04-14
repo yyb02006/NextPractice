@@ -87,7 +87,7 @@ const Page: NextPage<{ products: ProductWithCount[] }> = ({ products }) => {
 			value={{
 				fallback: {
 					'/api/products': {
-						ok: true,
+						success: true,
 						products,
 					},
 				},
@@ -98,11 +98,11 @@ const Page: NextPage<{ products: ProductWithCount[] }> = ({ products }) => {
 	);
 };
 
-export async function getServerSideProps() {
+export const getServerSideProps = async () => {
 	const products = await client.product.findMany({});
 	return {
 		props: { products: JSON.parse(JSON.stringify(products)) },
 	};
-}
+};
 
 export default Page;

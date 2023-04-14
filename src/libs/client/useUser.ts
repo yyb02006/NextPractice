@@ -15,13 +15,14 @@ export default function useUser(): UseUser {
 	const router = useRouter();
 	/**
 	 * 근본적인 원인과 해결방법으로는,
-	 * 이전에는 success : false를 가져왔는데
+	 * 이전에는 handlerWrapper에서 req.session.user가 없을 경우 응답으로 401status + {success : false}를 보냈는데
 	 * 수정후에 pathname이 /enter일 때는 res.end();로 응답을 해서 undefined를 가져옴
 	 * 그래서 정상로그인 후 useEffect 첫 실행때 useSWR이전 data = undefined라 /enter로 튕겨지지 않음
 	 */
 	const { data, error, isLoading } = useSWR(
 		`/api/users/own?path=${router.pathname}`
 	);
+
 	useEffect(() => {
 		/***** data와 !data.success를 묶어서 조건문으로 사용하는이유?
 		 *

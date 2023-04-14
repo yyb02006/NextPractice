@@ -6,7 +6,7 @@ import useMutation from '@/libs/client/useMutation';
 import { useForm } from 'react-hook-form';
 import { Post } from '@prisma/client';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import RadioButton from '@/components/radioButton';
 import useCoords from '@/libs/client/useCoord';
 
@@ -24,7 +24,7 @@ const Write: NextPage = () => {
 	const router = useRouter();
 	const { latitude, longitude } = useCoords();
 	const [category, setCategory] = useState('');
-	const [buttonValues, setButtonValues] = useState([
+	const buttonValues = useRef([
 		'콤-퓨타',
 		'만화책',
 		'배달음식',
@@ -55,7 +55,7 @@ const Write: NextPage = () => {
 			>
 				<RadioButton
 					title='카테고리'
-					buttonValues={buttonValues}
+					buttonValues={buttonValues.current}
 					category={category}
 					setCategory={setCategory}
 				></RadioButton>
