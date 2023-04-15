@@ -2,9 +2,9 @@ import FloatingButton from '@/components/floating-button';
 import Layout from '@/components/layout';
 import Link from 'next/link';
 import type { NextPage } from 'next';
-import useSWR from 'swr';
+import useSWR, { SWRConfig } from 'swr';
 import { Stream } from '@prisma/client';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import useInfiniteScroll from '@/libs/client/useInfiniteScroll';
 
 export interface StreamsProps {
@@ -12,14 +12,16 @@ export interface StreamsProps {
 	streams: Stream[];
 }
 
-const Streams: NextPage = () => {
+const Test: NextPage = () => {
 	const [page, setPage] = useState(0);
 	const [streams, setStreams] = useState<Stream[]>([]);
 	const {
 		data: streamsData,
 		isLoading,
 		mutate,
-	} = useSWR<StreamsProps>(`/api/streams?page=${page}&size=10`);
+	} = useSWR<StreamsProps>(`/api/streams?page=${page}&size=10`, {
+		suspense: true,
+	});
 
 	function onIntersecting() {
 		setPage((p) => p + 1);
@@ -37,36 +39,49 @@ const Streams: NextPage = () => {
 			setStreams((p) => [...p, ...streamsData?.streams]);
 		}
 	}, [streamsData?.streams]);
+	return (
+		<>
+			{streams.map((stream, index) => (
+				<div
+					ref={
+						index === streams.length - 2
+							? streamsData?.success
+								? target
+								: null
+							: null
+					}
+					key={index}
+				>
+					<Link href={`/streams/${stream.Id}`}>
+						<div className='w-full bg-indigo-500 aspect-video rounded-sm'></div>
+						<div className='inline-block mt-2 font-medium text-gray-200 text-sm'>
+							<span className='text-green-500'>
+								{stream.name.length > 1 ? stream.name.slice(0, 2) : stream.name}
+							</span>
+							{stream.name.length > 1
+								? stream.name.slice(2, stream.name.length)
+								: null}
+						</div>
+					</Link>
+				</div>
+			))}
+		</>
+	);
+};
 
+const Streams: NextPage = () => {
 	return (
 		<Layout title='라이브 커머스' hasTabBar={true} seoTitle='라이브 커머스'>
 			<div className='bg-[#101010] text-[#fafafa] font-SCoreDream px-4 py-12 space-y-6'>
-				{streams.map((stream, index) => (
-					<div
-						ref={
-							index === streams.length - 2
-								? streamsData?.success
-									? target
-									: null
-								: null
-						}
-						key={index}
-					>
-						<Link href={`/streams/${stream.Id}`}>
-							<div className='w-full bg-indigo-500 aspect-video rounded-sm'></div>
-							<div className='inline-block mt-2 font-medium text-gray-200 text-sm'>
-								<span className='text-green-500'>
-									{stream.name.length > 1
-										? stream.name.slice(0, 2)
-										: stream.name}
-								</span>
-								{stream.name.length > 1
-									? stream.name.slice(2, stream.name.length)
-									: null}
-							</div>
-						</Link>
-					</div>
-				))}
+				<Suspense
+					fallback={
+						<div className='text-gray-100 w-32 h-32 bg-pink-400'>
+							hihihihihihidddddddddddddddddddddddddd
+						</div>
+					}
+				>
+					<Test />
+				</Suspense>
 				<FloatingButton href='/streams/create'>
 					<svg
 						xmlns='http://www.w3.org/2000/svg'
@@ -87,4 +102,12 @@ const Streams: NextPage = () => {
 	);
 };
 
-export default Streams;
+const Page: NextPage = () => {
+	return (
+		<SWRConfig value={{ fallbackData: null }}>
+			<Streams />
+		</SWRConfig>
+	);
+};
+
+export default Page;

@@ -190,7 +190,6 @@ export const getServerSideProps = ssrSessionWrapper(async function ({
 	const profile = await client.user.findUnique({
 		where: { id: req?.session.user?.id },
 	});
-	console.log('1111111111' + JSON.stringify(profile));
 
 	//nextjs가 date객체직렬화(객체를 byte단위로 주고받기 위해 일자로 나열하는 것)를 못함
 	return { props: { profile: JSON.parse(JSON.stringify(profile)) } };
