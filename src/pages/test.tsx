@@ -67,7 +67,7 @@ export const useObserver = (
 		}
 
 		return () => observer && observer.disconnect();
-	}, [ref, rootMargin, threshold, checkIntersect]);
+	}, [ref, rootMargin, threshold, checkIntersect, root]);
 
 	return setRef;
 };

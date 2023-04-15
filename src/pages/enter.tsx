@@ -123,7 +123,7 @@ export default function Enter() {
 										method === 'email' ? ' border-green-500 text-green-500' : ''
 									)}
 								>
-									이-메일
+									이-메일?
 								</button>
 								<button
 									onClick={onPhoneClick}
